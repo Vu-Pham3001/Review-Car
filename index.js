@@ -1,9 +1,6 @@
-// DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     initCarousels();
-    initReviewSystem();
-    addClickHandlers();
-    addAnimations();
+    getData();
 });
 
 function initCarousels() {
@@ -56,8 +53,6 @@ function initCarousel(container, prevBtn, nextBtn, type) {
         nextBtn.disabled = currentPosition >= maxScroll;
         nextBtn.style.opacity = currentPosition >= maxScroll ? '0.5' : '1';
         nextBtn.style.cursor = currentPosition >= maxScroll ? 'not-allowed' : 'pointer';
-        
-        console.log(`Container width: ${containerWidth}, Total width: ${totalWidth}, Max scroll: ${maxScroll}, Current position: ${currentPosition}`);
     }
     
     function scrollTo(position) {
@@ -68,7 +63,6 @@ function initCarousel(container, prevBtn, nextBtn, type) {
         currentPosition = Math.max(0, Math.min(position, maxScroll));
         container.style.transform = `translateX(-${currentPosition}px)`;
         
-        console.log(`Scrolling to: ${currentPosition}px`);
         updateButtons();
     }
     
@@ -79,7 +73,6 @@ function initCarousel(container, prevBtn, nextBtn, type) {
         const scrollAmount = visibleItems * itemWidth;
         const newPosition = currentPosition - scrollAmount;
         
-        console.log(`Prev clicked. Current: ${currentPosition}, New: ${newPosition}, Scroll amount: ${scrollAmount}`);
         scrollTo(newPosition);
     });
     
@@ -90,7 +83,6 @@ function initCarousel(container, prevBtn, nextBtn, type) {
         const scrollAmount = visibleItems * itemWidth;
         const newPosition = currentPosition + scrollAmount;
         
-        console.log(`Next clicked. Current: ${currentPosition}, New: ${newPosition}, Scroll amount: ${scrollAmount}`);
         scrollTo(newPosition);
     });
     
@@ -110,160 +102,12 @@ function initCarousel(container, prevBtn, nextBtn, type) {
         container.style.transform = `translateX(-${currentPosition}px)`;
         updateButtons();
         
-        console.log(`Resized. New item width: ${itemWidth}, Container width: ${containerWidth}`);
     });
     
     setTimeout(() => {
         updateButtons();
     }, 100);
 }
-
-function initReviewSystem() {
-    console.log('Review system initialized');
-    
-    const ratingNumber = document.querySelector('.rating-number');
-    if (ratingNumber) {
-        animateNumber(ratingNumber, 0, 4.7, 1000);
-    }
-    
-    const recommendationCircle = document.querySelector('.recommendation-circle span');
-    if (recommendationCircle) {
-        animateNumber(recommendationCircle, 0, 95, 800);
-    }
-}
-
-function animateNumber(element, start, end, duration) {
-    const startTime = performance.now();
-    const startValue = start;
-    const endValue = end;
-    
-    function updateNumber(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        const currentValue = startValue + (endValue - startValue) * progress;
-        
-        if (endValue % 1 === 0) {
-            element.textContent = Math.floor(currentValue);
-        } else {
-            element.textContent = currentValue.toFixed(1);
-        }
-        
-        if (progress < 1) {
-            requestAnimationFrame(updateNumber);
-        }
-    }
-    
-    requestAnimationFrame(updateNumber);
-}
-
-function addClickHandlers() {
-    const playButtons = document.querySelectorAll('.play-button');
-    playButtons.forEach((button, index) => {
-        button.addEventListener('click', function() {
-            playVideo(index + 1);
-        });
-    });
-    
-    const imageItems = document.querySelectorAll('.image-item');
-    imageItems.forEach((item, index) => {
-        item.addEventListener('click', function() {
-            expandImage(index + 1);
-        });
-    });
-}
-
-function playVideo(videoNumber) {
-    alert(`Đang phát video ${videoNumber}...\n\nTrong thực tế, đây sẽ mở video player hoặc modal.`);
-    
-    const button = event.currentTarget;
-    button.style.transform = 'translate(-50%, -50%) scale(0.9)';
-    setTimeout(() => {
-        button.style.transform = 'translate(-50%, -50%) scale(1.1)';
-    }, 150);
-}
-
-function expandImage(imageNumber) {
-    alert(`Đang mở rộng hình ảnh ${imageNumber}...\n\nTrong thực tế, đây sẽ mở lightbox hoặc modal.`);
-    
-    const item = event.currentTarget;
-    item.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        item.style.transform = 'scale(1.05)';
-    }, 150);
-}
-
-function addAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    const items = document.querySelectorAll('.video-item, .image-item');
-    items.forEach((item, index) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(20px)';
-        item.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-        observer.observe(item);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const stars = document.querySelectorAll('.stars i');
-    
-    stars.forEach((star, index) => {
-        star.addEventListener('mouseenter', function() {
-            for (let i = 0; i <= index; i++) {
-                stars[i].style.color = '#f39c12';
-                stars[i].style.transform = 'scale(1.2)';
-            }
-        });
-        
-        star.addEventListener('mouseleave', function() {
-            stars.forEach(s => {
-                s.style.color = '#f39c12';
-                s.style.transform = 'scale(1)';
-            });
-        });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const videoContainer = document.getElementById('videoContainer');
-    if (videoContainer) {
-        addTouchSupport(videoContainer, 'video');
-    }
-    
-    const imageContainer = document.getElementById('imageContainer');
-    if (imageContainer) {
-        addTouchSupport(imageContainer, 'image');
-    }
-});
 
 function addTouchSupport(container, type) {
     let startX = 0;
@@ -306,4 +150,28 @@ function addTouchSupport(container, type) {
         
         isDragging = false;
     });
+}
+
+function getData() {
+    console.log('getData');
+    const ratingNumber = document.getElementsByClassName('rating-number')
+    ratingNumber[0].innerHTML = '4.7'  
+    const numberStart = 3;
+
+    const stars = [];
+    const fullStars = Math.floor(numberStart);
+    const hasHalfStar = numberStart % 1 !== 0;
+
+    for (let i = 0; i < fullStars; i++) {
+        stars.push('<i class="fas fa-star"></i>');
+    }
+    if (hasHalfStar) {
+        stars.push('<i class="fas fa-star-half-alt"></i>');
+    }
+
+    const starsElements = document.getElementsByClassName('stars');
+    if (starsElements.length > 0) {
+        starsElements[0].innerHTML = stars.join('');
+    }
+
 }
