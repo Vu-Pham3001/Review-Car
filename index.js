@@ -1,6 +1,9 @@
+var pageIndex = 0;
+
 document.addEventListener('DOMContentLoaded', function() {
     initCarousels();
-    getData();
+    getVideoAndImage();
+    getData(pageIndex);
 });
 
 function initCarousels() {
@@ -152,26 +155,72 @@ function addTouchSupport(container, type) {
     });
 }
 
-function getData() {
-    console.log('getData');
-    const ratingNumber = document.getElementsByClassName('rating-number')
-    ratingNumber[0].innerHTML = '4.7'  
-    const numberStart = 3;
+function getVideoAndImage() {
+    fetch(`http://103.159.51.69:3000/api/media/files`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('API data  video:', data);
+        })
+}
 
-    const stars = [];
-    const fullStars = Math.floor(numberStart);
-    const hasHalfStar = numberStart % 1 !== 0;
+function getData(pageIndex) {
+    fetch(`http://103.159.51.69:3000/api/reviews?pageIndex=${pageIndex}&pageSize=1`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('API data:', data);
+            const reviews = data.data.reviews;
+            const reviewContainer = document.getElementsByClassName('customer-review');
+            reviews.forEach(review => {
+                const reviewHTML = `
+                    <div class="review-card">
+                        <h2 class="review-title">${review.title}</h2>
+                        <div class="review-meta">
+                            <div class="stars">
+                                ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
+                                ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
+                            </div>
+                            <span class="review-date">${review.modified}</span>
+                           
+                        </div>
+                        <div class="review-meta">
+                            <span class="badge verified">${review.verified_purchase !== 0 ? 'Verified Purchase' : ''}</span>
+                            <span class="badge recommend"><i class="fas fa-check-circle"></i> ${review.would_recommend !== 0 ? 'Would recommend' : ''}</span>
+                        </div>
+                        <div class="review-content">
+                            <p>${review.description}</p>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div class="review-author">${review.user}</div>
+                            <div class="review-actions">
+                                <div>
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>Helpful</span> <span class="count">(${review.like})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-gallery">
+                            ${review.images.map(image => `
+                                <img onClick="() => showModalDetail(review)" src="http://103.159.51.69:3000/uploads/${image}" alt="Review photo 1" width="160px" height="160px">
+                            `).join('')}
+                        </div>
+                        
+                    </div>
+                `;
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = reviewHTML;
+                reviewContainer[0].appendChild(tempDiv.firstElementChild);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching reviews:', error);
+        });
+}
 
-    for (let i = 0; i < fullStars; i++) {
-        stars.push('<i class="fas fa-star"></i>');
-    }
-    if (hasHalfStar) {
-        stars.push('<i class="fas fa-star-half-alt"></i>');
-    }
+function getMoreReview() {
+    pageIndex++;
+    getData(pageIndex + 1);
+}
 
-    const starsElements = document.getElementsByClassName('stars');
-    if (starsElements.length > 0) {
-        starsElements[0].innerHTML = stars.join('');
-    }
-
+function showModalDetail(review) {
+    console.log('review', review)
 }
