@@ -179,12 +179,11 @@ function getData(pageIndex) {
                                 ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
                                 ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
                             </div>
-                            <span class="review-date">${review.modified}</span>
-                           
+                            <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         </div>
                         <div class="review-meta">
                             <span class="badge verified">${review.verified_purchase !== 0 ? 'Verified Purchase' : ''}</span>
-                            <span class="badge recommend"><i class="fas fa-check-circle"></i> ${review.would_recommend !== 0 ? 'Would recommend' : ''}</span>
+                            <span class="badge recommend">${review.would_recommend !== 0 ? '<i class="fas fa-check-circle"></i> Would recommend' : ''}</span>
                         </div>
                         <div class="review-content">
                             <p>${review.description}</p>
@@ -200,7 +199,7 @@ function getData(pageIndex) {
                         </div>
                         <div class="review-gallery">
                             ${review.images.map(image => `
-                                <img onClick="() => showModalDetail(review)" src="http://103.159.51.69:3000/uploads/${image}" alt="Review photo 1" width="160px" height="160px">
+                                <img onclick="showModalDetail(${JSON.stringify(review).replace(/"/g, '&quot;')})" src="http://103.159.51.69:3000/uploads/${image}" alt="Review photo 1" width="160px" height="160px">
                             `).join('')}
                         </div>
                         
@@ -222,5 +221,102 @@ function getMoreReview() {
 }
 
 function showModalDetail(review) {
-    console.log('review', review)
+    const modal = document.getElementById('reviewModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    // Populate modal content
+    modalContent.innerHTML = `
+        <div class="modal-header">
+            <h2>${review.title}</h2>
+        </div>
+        <div class="modal-body">
+            <div class="modal-rating">
+                <div class="stars">
+                    ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
+                    ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
+                </div>
+                <span class="rating-text">${review.rate}/5 stars</span>
+            </div>
+            
+            <div class="modal-meta">
+                <div class="meta-item">
+                    <strong>Người đánh giá:</strong> ${review.user}
+                </div>
+                <div class="meta-item">
+                    <strong>Ngày đánh giá:</strong> ${review.modified}
+                </div>
+                <div class="meta-item">
+                    <strong>Mua xác thực:</strong> 
+                    <span class="badge ${review.verified_purchase !== 0 ? 'verified' : 'not-verified'}">
+                        ${review.verified_purchase !== 0 ? 'Có' : 'Không'}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <strong>Khuyến nghị:</strong> 
+                    <span class="badge ${review.would_recommend !== 0 ? 'recommend' : 'not-recommend'}">
+                        ${review.would_recommend !== 0 ? 'Có' : 'Không'}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <strong>Lượt thích:</strong> ${review.like}
+                </div>
+            </div>
+            
+            <div class="modal-description">
+                <h3>Mô tả chi tiết:</h3>
+                <p>${review.description}</p>
+            </div>
+            
+            <div class="modal-gallery">
+                <h3>Hình ảnh đánh giá:</h3>
+                <div class="gallery-grid">
+                    ${review.images.map(image => `
+                        <div class="gallery-item">
+                            <img src="http://103.159.51.69:3000/uploads/${image}" alt="Review image" onclick="openImageLightbox('http://103.159.51.69:3000/uploads/${image}')">
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Show modal
+    modal.style.display = 'block';
+    
+    // Close modal when clicking on X
+    const closeBtn = document.querySelector('.close');
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+}
+
+function openImageLightbox(imageSrc) {
+    // Create lightbox for full-size image viewing
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.innerHTML = `
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <img src="${imageSrc}" alt="Full size image">
+        </div>
+    `;
+    
+    document.body.appendChild(lightbox);
+    
+    // Close lightbox
+    const closeLightbox = () => {
+        document.body.removeChild(lightbox);
+    };
+    
+    lightbox.querySelector('.lightbox-close').onclick = closeLightbox;
+    lightbox.onclick = (e) => {
+        if (e.target === lightbox) closeLightbox();
+    };
 }
