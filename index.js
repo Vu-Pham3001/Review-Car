@@ -214,7 +214,7 @@ function getImage() {
 }
 
 function getData(pageIndex) {
-    fetch(`http://103.159.51.69:3000/api/reviews?pageIndex=${pageIndex}&pageSize=1`)
+    fetch(`http://103.159.51.69:3000/api/reviews?pageIndex=${pageIndex}&pageSize=8`)
         .then(response => response.json())
         .then(data => {
             console.log('API data:', data);
@@ -243,7 +243,7 @@ function getData(pageIndex) {
                             <div class="review-actions">
                                 <div>
                                     <i class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span class="count">(${review.like})</span>
+                                    <span>Helpful</span> <span class="count">(${review.like ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -274,81 +274,105 @@ function showModalDetail(review) {
     const modal = document.getElementById('reviewModal');
     const modalContent = document.getElementById('modalContent');
     
-    // Populate modal content
     modalContent.innerHTML = `
-        <div class="modal-header">
-            <h2>All Photos</h2>
-        </div>
-        <div class="modal-body">
-            <div class="modal-rating">
-                <div class="stars">
-                    ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
-                    ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
-                </div>
-                <span class="rating-text">${review.rate}/5 stars</span>
+        <div class="review-modal">
+            <div class="modal-topbar">
+                <button class="back-btn" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <span class="topbar-title">All Photos</span>
             </div>
-            
-            <div class="modal-meta">
-                <div class="meta-item">
-                    <strong>Người đánh giá:</strong> ${review.user}
+            <div class="review-modal-body">
+                <div class="modal-media">
+                    <div class="media-viewer">
+                        <img id="modalMainImg" src="${base_img}${review.images[0]}" alt="review image">
+                        <button class="media-nav prev" id="mediaPrev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="media-nav next" id="mediaNext"><i class="fas fa-chevron-right"></i></button>
+                    </div>
                 </div>
-                <div class="meta-item">
-                    <strong>Ngày đánh giá:</strong> ${review.modified}
-                </div>
-                <div class="meta-item">
-                    <strong>Mua xác thực:</strong> 
-                    <span class="badge ${review.verified_purchase !== 0 ? 'verified' : 'not-verified'}">
-                        ${review.verified_purchase !== 0 ? 'Có' : 'Không'}
-                    </span>
-                </div>
-                <div class="meta-item">
-                    <strong>Khuyến nghị:</strong> 
-                    <span class="badge ${review.would_recommend !== 0 ? 'recommend' : 'not-recommend'}">
-                        ${review.would_recommend !== 0 ? 'Có' : 'Không'}
-                    </span>
-                </div>
-                <div class="meta-item">
-                    <strong>Lượt thích:</strong> ${review.like}
-                </div>
-            </div>
-            
-            <div class="modal-description">
-                <h3>Mô tả chi tiết:</h3>
-                <p>${review.description}</p>
-            </div>
-            
-            <div class="modal-gallery">
-                <h3>Hình ảnh đánh giá:</h3>
-                <div class="gallery-grid">
-                    ${review.images.map(image => `
-                        <div class="gallery-item">
-                            <img src="http://103.159.51.69:3000/uploads/${image}" alt="Review image" onclick="openImageLightbox('http://103.159.51.69:3000/uploads/${image}')">
+                <div class="modal-details">
+                    <div class="detail-title">${review.title}</div>
+                    <div class="detail-meta-line">
+                        <div class="stars">
+                            ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
+                            ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
                         </div>
-                    `).join('')}
+                        <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                        
+                    </div>
+                    <div class="detail-meta-line">
+                        <span class="badge ${review.verified_purchase !== 0 ? 'verified' : 'not-verified'}">${review.verified_purchase !== 0 ? 'Verified Purchase' : ''}</span>
+                        <span class="badge ${review.would_recommend !== 0 ? 'recommend' : 'not-recommend'}">${review.would_recommend !== 0 ? 'Would recommend' : ''}</span>
+                    </div>
+                    <div class="detail-text">${review.description}</div>
+                    <div class="detail-footer">
+                        <div class="author">${review.user}</div>
+                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.like ?? 0})</span></div>
+                    </div>
+                    <div class="media-thumbs" id="mediaThumbs">
+                        ${review.images.map((image, i) => `
+                            <img data-index="${i}" class="${i===0 ? 'active' : ''}" src="${base_img}${image}" alt="thumb ${i+1}">
+                        `).join('')}
+                    </div>
                 </div>
             </div>
         </div>
     `;
     
-    // Show modal
     modal.style.display = 'block';
     
-    // Close modal when clicking on X
     const closeBtn = document.querySelector('.close');
     closeBtn.onclick = function() {
         modal.style.display = 'none';
     }
     
-    // Close modal when clicking outside
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = 'none';
         }
     }
+
+    let currentIndex = 0;
+    const mainImg = document.getElementById('modalMainImg');
+    const prevBtn = document.getElementById('mediaPrev');
+    const nextBtn = document.getElementById('mediaNext');
+    const thumbsWrap = document.getElementById('mediaThumbs');
+    const thumbs = thumbsWrap ? Array.from(thumbsWrap.querySelectorAll('img')) : [];
+    const totalImages = Array.isArray(review.images) ? review.images.length : 0;
+
+    function updateNavDisabled() {
+        const disabled = totalImages <= 1;
+        if (prevBtn) prevBtn.disabled = disabled;
+        if (nextBtn) nextBtn.disabled = disabled;
+    }
+
+    function setActive(index) {
+        if (!totalImages || !mainImg) return;
+        currentIndex = (index + totalImages) % totalImages;
+        mainImg.src = `${base_img}${review.images[currentIndex]}`;
+        thumbs.forEach((t, i) => {
+            if (i === currentIndex) t.classList.add('active');
+            else t.classList.remove('active');
+        });
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => setActive(currentIndex - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => setActive(currentIndex + 1));
+    thumbs.forEach(t => t.addEventListener('click', () => setActive(parseInt(t.getAttribute('data-index'), 10))));
+
+    setActive(0);
+    updateNavDisabled();
+
+    function handleKey(e){
+        if (modal.style.display !== 'block') return;
+        if (e.key === 'ArrowLeft') setActive(currentIndex - 1);
+        if (e.key === 'ArrowRight') setActive(currentIndex + 1);
+        if (e.key === 'Escape') modal.style.display = 'none';
+    }
+    document.addEventListener('keydown', handleKey, { once: false });
 }
 
 function openImageLightbox(imageSrc) {
-    // Create lightbox for full-size image viewing
     const lightbox = document.createElement('div');
     lightbox.className = 'lightbox';
     lightbox.innerHTML = `
@@ -360,7 +384,6 @@ function openImageLightbox(imageSrc) {
     
     document.body.appendChild(lightbox);
     
-    // Close lightbox
     const closeLightbox = () => {
         document.body.removeChild(lightbox);
     };
