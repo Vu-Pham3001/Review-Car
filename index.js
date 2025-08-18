@@ -1,8 +1,10 @@
 var pageIndex = 0;
+var base_img = 'http://103.159.51.69:3000/uploads/images/'
 
 document.addEventListener('DOMContentLoaded', function() {
     initCarousels();
-    getVideoAndImage();
+    getVideo();
+    getImage();
     getData(pageIndex);
 });
 
@@ -155,12 +157,60 @@ function addTouchSupport(container, type) {
     });
 }
 
-function getVideoAndImage() {
-    fetch(`http://103.159.51.69:3000/api/media/files`)
+function getVideo() {
+    fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=6`)
         .then(response => response.json())
         .then(data => {
             console.log('API data  video:', data);
-        })
+            const videos = data?.data
+        const videoContainer = document.getElementById('videoContainer');
+        if (videoContainer && Array.isArray(videos)) {
+            videoContainer.innerHTML = videos.map((video, idx) => {
+                const thumbnail = `http://103.159.51.69:3000${video.url}`
+                return `
+                    <div class="video-item">
+                        <div class="video-thumbnail" style="position: relative;">
+                            <video 
+                                src="${thumbnail}" 
+                                controls 
+                                width="180" 
+                                height="120" 
+                                poster="" 
+                                style="border-radius: 8px; background: #000;"
+                            >
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="video-rating">
+                            <div class="stars">
+                                ${[...Array(5)].map(() => '<i class="fas fa-star"></i>').join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    })
+}
+
+function getImage() {
+    fetch(`http://103.159.51.69:3000/api/media/files?type=images&pageIndex=0&pageSize=10`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('API data  image:', data);
+            const images = data?.data
+            const imageContainer = document.getElementById('imageContainer');
+            if (imageContainer && Array.isArray(images)) {
+                imageContainer.innerHTML = images.map((image, idx) => {
+                    const imgSrc = `http://103.159.51.69:3000${image.url}`;
+                    return `
+                        <div class="image-item">
+                            <img src="${imgSrc}" alt="Review image ${idx + 1}">
+                        </div>
+                    `;
+                }).join('');
+            }
+    })
 }
 
 function getData(pageIndex) {
@@ -199,7 +249,7 @@ function getData(pageIndex) {
                         </div>
                         <div class="review-gallery">
                             ${review.images.map(image => `
-                                <img onclick="showModalDetail(${JSON.stringify(review).replace(/"/g, '&quot;')})" src="http://103.159.51.69:3000/uploads/${image}" alt="Review photo 1" width="160px" height="160px">
+                                <img onclick="showModalDetail(${JSON.stringify(review).replace(/"/g, '&quot;')})" src="${base_img}${image}" alt="Review photo 1" width="160px" height="160px">
                             `).join('')}
                         </div>
                         
@@ -227,7 +277,7 @@ function showModalDetail(review) {
     // Populate modal content
     modalContent.innerHTML = `
         <div class="modal-header">
-            <h2>${review.title}</h2>
+            <h2>All Photos</h2>
         </div>
         <div class="modal-body">
             <div class="modal-rating">
