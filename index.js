@@ -1,5 +1,6 @@
 var pageIndex = 0;
 var base_img = 'http://103.159.51.69:3000/uploads/images/'
+var base_video = 'http://103.159.51.69:3000/uploads/videos/'
 
 document.addEventListener('DOMContentLoaded', function() {
     initCarousels();
@@ -166,7 +167,7 @@ function getVideo() {
         const videoContainer = document.getElementById('videoContainer');
         if (videoContainer && Array.isArray(videos)) {
             videoContainer.innerHTML = videos.map((video, idx) => {
-                const thumbnail = `http://103.159.51.69:3000${video.url}`
+                const thumbnail = `${base_video}${video.filename}`
                 return `
                     <div class="video-item">
                         <div class="video-thumbnail" style="position: relative;">
@@ -202,7 +203,7 @@ function getImage() {
             const imageContainer = document.getElementById('imageContainer');
             if (imageContainer && Array.isArray(images)) {
                 imageContainer.innerHTML = images.map((image, idx) => {
-                    const imgSrc = `http://103.159.51.69:3000${image.url}`;
+                    const imgSrc = `${base_img}${image.filename}`;
                     return `
                         <div class="image-item">
                             <img src="${imgSrc}" alt="Review image ${idx + 1}">
@@ -236,14 +237,14 @@ function getData(pageIndex) {
                             <span class="badge recommend">${review.would_recommend !== 0 ? '<i class="fas fa-check-circle"></i> Would recommend' : ''}</span>
                         </div>
                         <div class="review-content">
-                            <p>${review.description}</p>
+                            <p>${review.description ?? ''}</p>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <div class="review-author">${review.user}</div>
                             <div class="review-actions">
                                 <div>
                                     <i class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span class="count">(${review.like ?? 0})</span>
+                                    <span>Helpful</span> <span class="count">(${review.rate ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +308,7 @@ function showModalDetail(review) {
                     <div class="detail-text">${review.description}</div>
                     <div class="detail-footer">
                         <div class="author">${review.user}</div>
-                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.like ?? 0})</span></div>
+                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.rate ?? 0})</span></div>
                     </div>
                     <div class="media-thumbs" id="mediaThumbs">
                         ${review.images.map((image, i) => `

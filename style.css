@@ -163,6 +163,7 @@ body {
     border-radius: 10px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 200px;
 }
 
 .video-item:hover {
@@ -182,10 +183,6 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-}
-
-.video-item:hover .video-thumbnail img {
-    transform: scale(1.05);
 }
 
 .play-button {
