@@ -162,43 +162,41 @@ function getVideo() {
     fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=6`)
         .then(response => response.json())
         .then(data => {
-            console.log('API data  video:', data);
             const videos = data?.data
-        const videoContainer = document.getElementById('videoContainer');
-        if (videoContainer && Array.isArray(videos)) {
-            videoContainer.innerHTML = videos.map((video, idx) => {
-                const thumbnail = `${base_video}${video.filename}`
-                return `
-                    <div class="video-item">
-                        <div class="video-thumbnail" style="position: relative;">
-                            <video 
-                                src="${thumbnail}" 
-                                controls 
-                                width="180" 
-                                height="120" 
-                                poster="" 
-                                style="border-radius: 8px; background: #000;"
-                            >
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                        <div class="video-rating">
-                            <div class="stars">
-                                ${[...Array(5)].map(() => '<i class="fas fa-star"></i>').join('')}
+            const videoContainer = document.getElementById('videoContainer');
+            if (videoContainer && Array.isArray(videos)) {
+                videoContainer.innerHTML = videos.map((video, idx) => {
+                    const thumbnail = `${base_video}${video.filename}`
+                    return `
+                        <div class="video-item">
+                            <div class="video-thumbnail" style="position: relative;">
+                                <video 
+                                    src="${thumbnail}" 
+                                    controls 
+                                    width="180" 
+                                    height="120" 
+                                    poster="" 
+                                    style="border-radius: 8px; background: #000;"
+                                >
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            <div class="video-rating">
+                                <div class="stars">
+                                    ${[...Array(5)].map(() => '<i class="fas fa-star"></i>').join('')}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-            }).join('');
-        }
-    })
+                    `;
+                }).join('');
+            }
+        })
 }
 
 function getImage() {
     fetch(`http://103.159.51.69:3000/api/media/files?type=images&pageIndex=0&pageSize=10`)
         .then(response => response.json())
         .then(data => {
-            console.log('API data  image:', data);
             const images = data?.data
             const imageContainer = document.getElementById('imageContainer');
             if (imageContainer && Array.isArray(images)) {
@@ -206,7 +204,7 @@ function getImage() {
                     const imgSrc = `${base_img}${image.filename}`;
                     return `
                         <div class="image-item">
-                            <img src="${imgSrc}" alt="Review image ${idx + 1}">
+                            <img onClick="getImageDetail(${image.reviewId})" src="${imgSrc}" alt="Review image ${idx + 1}">
                         </div>
                     `;
                 }).join('');
@@ -214,11 +212,19 @@ function getImage() {
     })
 }
 
+function getImageDetail(id) {
+    fetch(`http://103.159.51.69:3000/api/reviews/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            const review = data.data
+            showModalDetail(review)
+    })
+}
+
 function getData(pageIndex) {
     fetch(`http://103.159.51.69:3000/api/reviews?pageIndex=${pageIndex}&pageSize=8`)
         .then(response => response.json())
         .then(data => {
-            console.log('API data:', data);
             const reviews = data.data.reviews;
             const reviewContainer = document.getElementsByClassName('customer-review');
             reviews.forEach(review => {
