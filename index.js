@@ -250,7 +250,7 @@ function getData(pageIndex) {
                             <div class="review-actions">
                                 <div>
                                     <i class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span class="count">(${review.rate ?? 0})</span>
+                                    <span>Helpful</span> <span class="count">(${review.likes ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -314,7 +314,7 @@ function showModalDetail(review) {
                     <div class="detail-text">${review.description}</div>
                     <div class="detail-footer">
                         <div class="author">${review.user}</div>
-                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.rate ?? 0})</span></div>
+                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.likes ?? 0})</span></div>
                     </div>
                     <div class="media-thumbs" id="mediaThumbs">
                         ${review.images.map((image, i) => `
