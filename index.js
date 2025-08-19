@@ -169,17 +169,17 @@ function getVideo() {
                     const thumbnail = `${base_video}${video.filename}`
                     return `
                         <div class="video-item">
-                            <div class="video-thumbnail" style="position: relative;">
+                            <div class="video-thumbnail" style="position: relative;" onclick="showModalvideo('${thumbnail}')">
                                 <video 
-                                    src="${thumbnail}" 
-                                    controls 
-                                    width="180" 
-                                    height="120" 
-                                    poster="" 
-                                    style="border-radius: 8px; background: #000;"
+                                    src="${thumbnail}"
+                                    muted
+                                    playsinline
+                                    preload="metadata"
+                                    style="border-radius: 8px; background: #000; width: 100%; height: 100%; object-fit: cover;"
                                 >
                                     Your browser does not support the video tag.
                                 </video>
+                                <div class="play-button"><i class="fas fa-play"></i></div>
                             </div>
                             <div class="video-rating">
                                 <div class="stars">
@@ -275,6 +275,63 @@ function getData(pageIndex) {
 function getMoreReview() {
     pageIndex++;
     getData(pageIndex + 1);
+}
+
+function showModalvideo(videoSrc) {
+    const modal = document.getElementById('reviewModal');
+    const modalContent = document.getElementById('modalContent');
+    const modalContentWrapper = modalContent.closest('.modal-content');
+    if (modalContentWrapper) {
+        modalContentWrapper.style.maxWidth = '800px';
+    }
+
+    modalContent.innerHTML = `
+        <div class="review-modal">
+            <div class="modal-topbar">
+                <button class="back-btn" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <span class="topbar-title">Video</span>
+            </div>
+            <div style="padding: 20px 24px 24px">
+                <div class="modal-media">
+                    <div class="media-viewer">
+                        <video id="modalMainVideo" src="${videoSrc}" controls autoplay style="width: 100%; height: 520px; object-fit: contain; background: #000; display: block;"></video>
+                    </div>
+                </div>
+                <div class="modal-details"></div>
+            </div>
+        </div>
+    `;
+    
+    modal.style.display = 'block';
+    
+    const closeBtn = document.querySelector('.close');
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
+            if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
+        }
+    }
+    
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
+            if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
+        }
+    }
+    
+    const handleEsc = function(e) {
+        if (e.key === 'Escape') {
+            modal.style.display = 'none';
+            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
+            if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
+            document.removeEventListener('keydown', handleEsc);
+        }
+    };
+    document.addEventListener('keydown', handleEsc);
 }
 
 function showModalDetail(review) {
