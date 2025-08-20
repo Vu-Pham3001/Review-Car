@@ -18,11 +18,21 @@
                     <div class="rating-stars">
                         <span class="rating-number">4.7</span>
                         <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
+                            <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+                            <svg width="50" height="50" viewBox="0 0 60 60">
+                                <defs>
+                                    <linearGradient id="half-gold-white" x1="0" y1="0" x2="60" y2="0" gradientUnits="userSpaceOnUse">
+                                    <stop offset="50%" stop-color="gold"/>
+                                    <stop offset="50%" stop-color="white"/>
+                                    </linearGradient>
+                                </defs>
+                                <polygon
+                                    points="30,5 36.18,21.09 53,21.09 39.09,32.18 44.18,49 30,39.09 15.82,49 20.91,32.18 7,21.09 23.82,21.09"
+                                    fill="url(#half-gold-white)"
+                                    stroke="#fde047"
+                                    stroke-width="3"
+                                />
+                            </svg>
                         </div>
                     </div>
                     <p class="review-count">400+ reviews</p>
@@ -54,9 +64,10 @@
                                 />
                                 <text
                                     x="50"
-                                    y="58"
+                                    y="55"
                                     text-anchor="middle"
-                                    font-size="36"
+                                    dominant-baseline="middle"
+                                    font-size="45"
                                     fill="#218649"
                                     font-family="Arial, sans-serif"
                                     font-weight="bold"

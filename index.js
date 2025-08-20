@@ -169,21 +169,21 @@ function getVideo() {
                     const thumbnail = `${base_video}${video.filename}`
                     return `
                         <div class="video-item">
-                            <div class="video-thumbnail" style="position: relative;" onclick="showModalvideo('${thumbnail}')">
+                            <div class="video-thumbnail" style="position: relative;">
                                 <video 
-                                    src="${thumbnail}"
-                                    muted
-                                    playsinline
-                                    preload="metadata"
-                                    style="border-radius: 8px; background: #000; width: 100%; height: 100%; object-fit: cover;"
+                                    src="${thumbnail}" 
+                                    controls 
+                                    width="180" 
+                                    height="120" 
+                                    poster="" 
+                                    style="border-radius: 8px; background: #000;"
                                 >
                                     Your browser does not support the video tag.
                                 </video>
-                                <div class="play-button"><i class="fas fa-play"></i></div>
                             </div>
                             <div class="video-rating">
                                 <div class="stars">
-                                    ${[...Array(5)].map(() => '<i class="fas fa-star"></i>').join('')}
+                                    ${[...Array(5)].map(() => '<div class="star"></div>').join('')}
                                 </div>
                             </div>
                         </div>
@@ -233,8 +233,18 @@ function getData(pageIndex) {
                         <h2 class="review-title">${review.title}</h2>
                         <div class="review-meta">
                             <div class="stars">
-                                ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
-                                ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
+                                ${[...Array(review.rate)].map(() => '<div class="star"></div>').join('')}
+                                ${[...Array(5 - review.rate)].map(() => `
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                        <polygon 
+                                            points="12,2 14.09,8.26 20.18,8.27 15,12.14 17.18,18.02 12,14.27 6.82,18.02 9,12.14 3.82,8.27 9.91,8.26"
+                                            fill="white"
+                                            stroke="#fde047"
+                                            stroke-width="1.5"
+                                            stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                `).join('')}
                             </div>
                             <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         </div>
@@ -250,7 +260,7 @@ function getData(pageIndex) {
                             <div class="review-actions">
                                 <div>
                                     <i class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span class="count">(${review.likes ?? 0})</span>
+                                    <span>Helpful</span> <span class="count">(${review.rate ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -277,63 +287,6 @@ function getMoreReview() {
     getData(pageIndex + 1);
 }
 
-function showModalvideo(videoSrc) {
-    const modal = document.getElementById('reviewModal');
-    const modalContent = document.getElementById('modalContent');
-    const modalContentWrapper = modalContent.closest('.modal-content');
-    if (modalContentWrapper) {
-        modalContentWrapper.style.maxWidth = '800px';
-    }
-
-    modalContent.innerHTML = `
-        <div class="review-modal">
-            <div class="modal-topbar">
-                <button class="back-btn" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <span class="topbar-title">Video</span>
-            </div>
-            <div style="padding: 20px 24px 24px">
-                <div class="modal-media">
-                    <div class="media-viewer">
-                        <video id="modalMainVideo" src="${videoSrc}" controls autoplay style="width: 100%; height: 520px; object-fit: contain; background: #000; display: block;"></video>
-                    </div>
-                </div>
-                <div class="modal-details"></div>
-            </div>
-        </div>
-    `;
-    
-    modal.style.display = 'block';
-    
-    const closeBtn = document.querySelector('.close');
-    if (closeBtn) {
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
-            if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
-        }
-    }
-    
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
-            if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
-        }
-    }
-    
-    const handleEsc = function(e) {
-        if (e.key === 'Escape') {
-            modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
-            if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
-            document.removeEventListener('keydown', handleEsc);
-        }
-    };
-    document.addEventListener('keydown', handleEsc);
-}
-
 function showModalDetail(review) {
     const modal = document.getElementById('reviewModal');
     const modalContent = document.getElementById('modalContent');
@@ -358,8 +311,18 @@ function showModalDetail(review) {
                     <div class="detail-title">${review.title}</div>
                     <div class="detail-meta-line">
                         <div class="stars">
-                            ${[...Array(review.rate)].map(() => '<i class="fas fa-star"></i>').join('')}
-                            ${[...Array(5 - review.rate)].map(() => '<i class="far fa-star" style="color:gold;"></i>').join('')}
+                        ${[...Array(review.rate)].map(() => '<div class="star"></div>').join('')}
+                        ${[...Array(5 - review.rate)].map(() => `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <polygon 
+                                    points="12,2 14.09,8.26 20.18,8.27 15,12.14 17.18,18.02 12,14.27 6.82,18.02 9,12.14 3.82,8.27 9.91,8.26"
+                                    fill="white"
+                                    stroke="#fde047"
+                                    stroke-width="1.5"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        `).join('')}
                         </div>
                         <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         
@@ -371,7 +334,7 @@ function showModalDetail(review) {
                     <div class="detail-text">${review.description}</div>
                     <div class="detail-footer">
                         <div class="author">${review.user}</div>
-                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.likes ?? 0})</span></div>
+                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.rate ?? 0})</span></div>
                     </div>
                     <div class="media-thumbs" id="mediaThumbs">
                         ${review.images.map((image, i) => `
