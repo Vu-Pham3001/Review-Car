@@ -121,7 +121,6 @@ body {
 .review-count {
     color: #7f8c8d;
     font-size: 18px;
-    margin-left: 110px;
     margin-top: -25px;
 }
 
@@ -334,6 +333,7 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    border-radius: 5px;
 }
 
 .customer-review {
@@ -349,8 +349,8 @@ body {
 }
 
 .review-title {
-    font-size: 2rem;
-    color: #2c3e50;
+    font-size: 30px;
+    color: #09090b;
     margin-bottom: 12px;
     font-weight: 700;
 }
@@ -454,7 +454,7 @@ body {
     
     .rating-summary {
         text-align: center;
-        padding-bottom: 20px;
+        padding: 0px 0px 20px;
         margin-bottom: 20px;
     }
 
@@ -465,10 +465,6 @@ body {
 
     .review-author {
         font-size: 14px;
-    }
-    
-    .rating-left {
-        align-items: center;
     }
     
     .rating-number {
@@ -502,7 +498,7 @@ body {
         padding: 20px;
     }
     .review-title {
-        font-size: 1.6rem;
+        font-size: 16px;
     }
 
     .review-gallery img {
@@ -548,7 +544,7 @@ body {
     }
     
     .rating-summary {
-        padding-bottom: 15px;
+        padding: 0px 0px 20px;
         margin-bottom: 15px;
     }
 
@@ -593,7 +589,7 @@ body {
     }
 
     .review-title {
-        font-size: 1.3rem;
+        font-size: 16px;
     }
     .review-actions {
         justify-content: flex-start;
