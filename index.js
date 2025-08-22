@@ -159,7 +159,7 @@ function addTouchSupport(container, type) {
 }
 
 function getVideo() {
-    fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=6`)
+    fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=10`)
         .then(response => response.json())
         .then(data => {
             const videos = data?.data
@@ -168,8 +168,8 @@ function getVideo() {
                 videoContainer.innerHTML = videos.map((video, idx) => {
                     const thumbnail = `${base_video}${video.filename}`
                     return `
-                        <div class="video-item">
-                            <div class="video-thumbnail" style="position: relative;" onclick="showModalvideo('${thumbnail}')">
+                        <div class="video-item" onclick="showModalvideo('${thumbnail}')">
+                            <div class="video-thumbnail">
                                 <video 
                                     src="${thumbnail}" 
                                     controls 
@@ -232,7 +232,7 @@ function getData(pageIndex) {
                     <div class="review-card">
                         <h2 class="review-title">${review.title}</h2>
                         <div class="review-meta">
-                            <div class="stars">
+                            <div class="stars" style="margin-right: 10px;">
                                 ${[...Array(review.rate)].map(() => '<div class="star"></div>').join('')}
                                 ${[...Array(5 - review.rate)].map(() => `
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -249,8 +249,8 @@ function getData(pageIndex) {
                             <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         </div>
                         <div class="review-meta">
-                            <span class="badge verified">${review.verified_purchase !== 0 ? 'Verified Purchase' : ''}</span>
-                            <span class="badge recommend">${review.would_recommend !== 0 ? '<i class="fas fa-check-circle"></i> Would recommend' : ''}</span>
+                            ${review.verified_purchase !== 0 ? `<span class="badge verified">Verified Purchase</span>` : ''}
+                            ${review.would_recommend !== 0 ? `<span class="badge recommend"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
                         </div>
                         <div class="review-content">
                             <p>${review.description ?? ''}</p>
@@ -350,8 +350,8 @@ function showModalDetail(review) {
     
     modalContent.innerHTML = `
         <div class="review-modal">
-            <div class="modal-topbar">
-                <button class="back-btn" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+            <div class="modal-topbar" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+                <button class="back-btn" aria-label="Back" >
                     <i class="fas fa-arrow-left"></i>
                 </button>
                 <span class="topbar-title">All Photos</span>
@@ -385,8 +385,8 @@ function showModalDetail(review) {
                         
                     </div>
                     <div class="detail-meta-line">
-                        <span class="badge ${review.verified_purchase !== 0 ? 'verified' : 'not-verified'}">${review.verified_purchase !== 0 ? 'Verified Purchase' : ''}</span>
-                        <span class="badge ${review.would_recommend !== 0 ? 'recommend' : 'not-recommend'}">${review.would_recommend !== 0 ? 'Would recommend' : ''}</span>
+                        ${review.verified_purchase !== 0 ? `<span class="badge verified">Verified Purchase</span>` : ''}
+                        ${review.would_recommend !== 0 ? `<span class="badge recommend"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
                     </div>
                     <div class="detail-text">${review.description}</div>
                     <div class="detail-footer">

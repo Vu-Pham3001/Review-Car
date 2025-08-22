@@ -63,6 +63,11 @@ body {
     );
 }
 
+.haft-start {
+    width: 50px;
+    height: 50px;
+}
+
 .start.white {
     background-color: white;
 }
@@ -111,11 +116,7 @@ body {
 .stars {
     display: flex;
     gap: 2px;
-}
-
-.stars i {
-    color: #fde047;
-    font-size: 40px;
+    align-items: center;
 }
 
 .review-count {
@@ -318,7 +319,6 @@ body {
 .image-item {
     flex: 0 0 200px;
     position: relative;
-    overflow: hidden;
     aspect-ratio: 1;
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -359,7 +359,6 @@ body {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
     color: #7f8c8d;
     margin-bottom: 5px;
 }
@@ -385,18 +384,11 @@ body {
 
 .badge.verified {
     color: #218649;
+    margin-right: 10px;
 }
 
 .badge.recommend {
     color: #218649;
-}
-
-.badge.not-verified {
-    color: #e74c3c;
-}
-
-.badge.not-recommend {
-    color: #e74c3c;
 }
 
 .review-content p {
@@ -541,11 +533,12 @@ body {
 
     .title-container {
         font-size: 30px;
+        margin-bottom: 10px;
     }
     
     .rating-summary {
         padding: 0px 0px 20px;
-        margin-bottom: 15px;
+        margin-bottom: 0px;
     }
 
     .review-content p {
@@ -561,8 +554,14 @@ body {
         font-size: 2rem;
     }
     
-    .stars i {
-        font-size: 1.2rem;
+    .rating-stars .star {
+        width: 26px;
+        height: 26px;
+    }
+
+    .haft-start {
+        width: 26px;
+        height: 26px;
     }
     
     .recommendation-circle {
@@ -572,6 +571,10 @@ body {
     
     .recommendation-circle span {
         font-size: 1.2rem;
+    }
+
+    .recommendation p {
+        font-size: 18px;
     }
     
     .video-reviews, .image-reviews {
@@ -677,7 +680,7 @@ body {
     font-weight: bold;
     position: absolute;
     right: 20px;
-    top: 15px;
+    top: 8px;
     cursor: pointer;
     z-index: 1001;
 }
@@ -978,5 +981,11 @@ body {
 
 @media (max-width: 600px) {
     .media-viewer img { height: 300px; }
+    .modal-details {
+        margin-top: 24px;
+    }
     .modal-details .detail-title { font-size: 1.5rem; }
+    .review-modal-body {
+        display: block;
+    }
 }
