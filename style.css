@@ -170,21 +170,45 @@ body {
 
 .video-reviews {
     position: relative;
-    overflow: hidden;
-    padding: 0 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 20px;
+    min-height: 300px;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+    cursor: grab;
+    user-select: none;
+}
+
+.video-reviews:active {
+    cursor: grabbing;
+}
+
+/* Custom scrollbar cho video container - ẩn scrollbar */
+.video-reviews::-webkit-scrollbar {
+    display: none;
+}
+
+.video-reviews {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .video-reviews-container {
     display: flex;
     gap: 25px;
-    transition: transform 0.3s ease;
+    padding: 10px 0;
+    min-width: max-content;
 }
 
 .video-item {
+    flex: 0 0 160px;
     background: #f8f9fa;
+    border-radius: 10px;
     overflow: hidden;
     height: 285px;
     width: 160px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .video-item:hover {
@@ -204,6 +228,8 @@ body {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    min-width: 160px;
+    min-height: 285px;
 }
 
 .play-button {
@@ -242,7 +268,7 @@ body {
 
 .video-rating {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     padding: 15px 15px 0px;
 }
 
@@ -262,43 +288,7 @@ body {
     line-height: 1.4;
 }
 
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background: rgba(255,255,255,0.9);
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: #333;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    z-index: 10;
-}
-
-.carousel-nav:hover {
-    background: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.carousel-nav.prev {
-    left: 0;
-}
-
-.carousel-nav.next {
-    right: 0;
-}
-
-.carousel-nav:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+/* Carousel navigation buttons - removed for horizontal scroll */
 
 .image-section {
     margin-top: 40px;
@@ -306,14 +296,34 @@ body {
 
 .image-reviews {
     position: relative;
-    overflow: hidden;
-    padding: 0 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+    cursor: grab;
+    user-select: none;
+}
+
+.image-reviews:active {
+    cursor: grabbing;
+}
+
+/* Custom scrollbar cho image container - ẩn scrollbar */
+.image-reviews::-webkit-scrollbar {
+    display: none;
+}
+
+.image-reviews {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .image-reviews-container {
     display: flex;
     gap: 20px;
-    transition: transform 0.3s ease;
+    padding: 10px 0;
+    min-width: max-content;
 }
 
 .image-item {
@@ -477,13 +487,7 @@ body {
     }
     
     .video-reviews, .image-reviews {
-        padding: 0 30px;
-    }
-    
-    .carousel-nav {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
+        padding: 0 20px;
     }
 
     .review-card {
@@ -578,13 +582,7 @@ body {
     }
     
     .video-reviews, .image-reviews {
-        padding: 0 25px;
-    }
-    
-    .carousel-nav {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
+        padding: 0 15px;
     }
     
     .video-section, .image-section {

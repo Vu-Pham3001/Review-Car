@@ -3,160 +3,12 @@ var base_img = 'http://103.159.51.69:3000/uploads/images/'
 var base_video = 'http://103.159.51.69:3000/uploads/videos/'
 
 document.addEventListener('DOMContentLoaded', function() {
-    initCarousels();
     getVideo();
     getImage();
     getData(pageIndex);
+    
+    initDragScroll();
 });
-
-function initCarousels() {
-    const videoContainer = document.getElementById('videoContainer');
-    const videoPrev = document.getElementById('videoPrev');
-    const videoNext = document.getElementById('videoNext');
-    
-    if (videoContainer && videoPrev && videoNext) {
-        initCarousel(videoContainer, videoPrev, videoNext, 'video');
-    }
-    
-    const imageContainer = document.getElementById('imageContainer');
-    const imagePrev = document.getElementById('imagePrev');
-    const imageNext = document.getElementById('imageNext');
-    
-    if (imageContainer && imagePrev && imageNext) {
-        initCarousel(imageContainer, imagePrev, imageNext, 'image');
-    }
-}
-
-function initCarousel(container, prevBtn, nextBtn, type) {
-    let currentPosition = 0;
-    let itemWidth = type === 'video' ? 275 : 220;
-    
-    function calculateItemWidth() {
-        if (window.innerWidth <= 480) {
-            return type === 'video' ? 275 : 220;
-        } else if (window.innerWidth <= 768) {
-            return type === 'video' ? 275 : 220;
-        } else {
-            return type === 'video' ? 275 : 220;
-        }
-    }
-    
-    function getVisibleItemsCount() {
-        const containerWidth = container.offsetWidth;
-        const calculatedItemWidth = calculateItemWidth();
-        return Math.floor(containerWidth / calculatedItemWidth);
-    }
-    
-    function updateButtons() {
-        const containerWidth = container.offsetWidth;
-        const totalWidth = container.scrollWidth;
-        const maxScroll = Math.max(0, totalWidth - containerWidth);
-        
-        prevBtn.disabled = currentPosition <= 0;
-        prevBtn.style.opacity = currentPosition <= 0 ? '0.5' : '1';
-        prevBtn.style.cursor = currentPosition <= 0 ? 'not-allowed' : 'pointer';
-        
-        nextBtn.disabled = currentPosition >= maxScroll;
-        nextBtn.style.opacity = currentPosition >= maxScroll ? '0.5' : '1';
-        nextBtn.style.cursor = currentPosition >= maxScroll ? 'not-allowed' : 'pointer';
-    }
-    
-    function scrollTo(position) {
-        const containerWidth = container.offsetWidth;
-        const totalWidth = container.scrollWidth;
-        const maxScroll = Math.max(0, totalWidth - containerWidth);
-        
-        currentPosition = Math.max(0, Math.min(position, maxScroll));
-        container.style.transform = `translateX(-${currentPosition}px)`;
-        
-        updateButtons();
-    }
-    
-    prevBtn.addEventListener('click', () => {
-        if (prevBtn.disabled) return;
-        
-        const visibleItems = getVisibleItemsCount();
-        const scrollAmount = visibleItems * itemWidth;
-        const newPosition = currentPosition - scrollAmount;
-        
-        scrollTo(newPosition);
-    });
-    
-    nextBtn.addEventListener('click', () => {
-        if (nextBtn.disabled) return;
-        
-        const visibleItems = getVisibleItemsCount();
-        const scrollAmount = visibleItems * itemWidth;
-        const newPosition = currentPosition + scrollAmount;
-        
-        scrollTo(newPosition);
-    });
-    
-    updateButtons();
-    
-    window.addEventListener('resize', () => {
-        itemWidth = calculateItemWidth();
-        
-        const containerWidth = container.offsetWidth;
-        const totalWidth = container.scrollWidth;
-        const maxScroll = Math.max(0, totalWidth - containerWidth);
-        
-        if (currentPosition > maxScroll) {
-            currentPosition = maxScroll;
-        }
-        
-        container.style.transform = `translateX(-${currentPosition}px)`;
-        updateButtons();
-        
-    });
-    
-    setTimeout(() => {
-        updateButtons();
-    }, 100);
-}
-
-function addTouchSupport(container, type) {
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-    
-    container.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-    });
-    
-    container.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        
-        currentX = e.touches[0].clientX;
-        const diff = startX - currentX;
-        
-        e.preventDefault();
-    });
-    
-    container.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        
-        const diff = startX - currentX;
-        const threshold = 50;
-        
-        if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
-                const nextBtn = container.parentElement.querySelector('.carousel-nav.next');
-                if (nextBtn && !nextBtn.disabled) {
-                    nextBtn.click();
-                }
-            } else {
-                const prevBtn = container.parentElement.querySelector('.carousel-nav.prev');
-                if (prevBtn && !prevBtn.disabled) {
-                    prevBtn.click();
-                }
-            }
-        }
-        
-        isDragging = false;
-    });
-}
 
 function getVideo() {
     fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=10`)
@@ -191,6 +43,9 @@ function getVideo() {
                 }).join('');
             }
         })
+        .catch(error => {
+            console.error('Error loading videos:', error);
+        });
 }
 
 function getImage() {
@@ -454,6 +309,41 @@ function showModalDetail(review) {
         if (e.key === 'Escape') modal.style.display = 'none';
     }
     document.addEventListener('keydown', handleKey, { once: false });
+}
+
+function initDragScroll() {
+    const containers = document.querySelectorAll('.video-reviews, .image-reviews');
+    
+    containers.forEach(container => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.style.cursor = 'grabbing';
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+        });
+        
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
+        
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
+        
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2; // Tốc độ scroll
+            container.scrollLeft = scrollLeft - walk;
+        });
+    });
 }
 
 function openImageLightbox(imageSrc) {
