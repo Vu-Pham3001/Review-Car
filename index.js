@@ -163,7 +163,6 @@ function getData(pageIndex) {
                 reviewContainer.appendChild(tempDiv.firstElementChild);
             });
 
-            // ====== Event delegation cho like button ======
             reviewContainer.addEventListener('click', function(e) {
                 const likeIcon = e.target.closest('.like-icon');
                 if (!likeIcon) return;
@@ -179,7 +178,6 @@ function getData(pageIndex) {
                 likeCountEl.textContent = `(${currentRate})`;
             });
 
-            // ====== Event delegation cho gallery ảnh ======
             reviewContainer.addEventListener('click', function(e) {
                 const img = e.target.closest('.review-img');
                 if (!img) return;
@@ -194,16 +192,6 @@ function getData(pageIndex) {
         .catch(error => {
             console.error('Error fetching reviews:', error);
         });
-}
-
-function onLike(item) {
-    const review = item;
-    const elementLike = document.getElementById(`likeCount-${review.id}`);
-    if (elementLike) {
-        const currentRate = parseInt(elementLike.textContent.replace(/[()]/g, ""), 10) || 0;
-        const newRate = currentRate + 1;
-        elementLike.textContent = `(${newRate})`;
-    }
 }
 
 function getMoreReview() {
