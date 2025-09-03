@@ -14,33 +14,41 @@ function getVideo() {
     fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=10`)
         .then(response => response.json())
         .then(data => {
-            const videos = data?.data
+            const videos = data?.data;
             const videoContainer = document.getElementById('videoContainer');
             if (videoContainer && Array.isArray(videos)) {
-                videoContainer.innerHTML = videos.map((video, idx) => {
-                    const thumbnail = `${base_video}${video.filename}`
-                    return `
-                        <div class="video-item" onclick="showModalvideo('${thumbnail}')">
-                            <div class="video-thumbnail">
-                                <video 
-                                    src="${thumbnail}" 
-                                    controls 
-                                    width="180" 
-                                    height="120" 
-                                    poster="" 
-                                    style="border-radius: 8px; background: #000;"
-                                >
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                            <div class="video-rating">
-                                <div class="stars">
-                                    ${[...Array(5)].map(() => '<div class="star"></div>').join('')}
-                                </div>
+                videoContainer.innerHTML = '';
+                
+                videos.forEach((video, idx) => {
+                    const thumbnail = `${base_video}${video.filename}`;
+
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'video-item';
+
+                    videoItem.addEventListener('click', () => showModalvideo(thumbnail));
+
+                    videoItem.innerHTML = `
+                        <div class="video-thumbnail">
+                            <video 
+                                src="${thumbnail}" 
+                                controls 
+                                width="180" 
+                                height="120" 
+                                poster="" 
+                                style="border-radius: 8px; background: #000;"
+                            >
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="video-rating">
+                            <div class="stars">
+                                ${[...Array(5)].map(() => '<div class="star"></div>').join('')}
                             </div>
                         </div>
                     `;
-                }).join('');
+
+                    videoContainer.appendChild(videoItem);
+                });
             }
         })
         .catch(error => {
@@ -93,11 +101,12 @@ function getData(pageIndex) {
         .then(response => response.json())
         .then(data => {
             const reviews = data.data.reviews;
-            const reviewContainer = document.getElementsByClassName('customer-review');
+            const reviewContainer = document.getElementsByClassName('customer-review')[0];
 
             reviews.forEach(review => {
+                // Tạo HTML review card
                 const reviewHTML = `
-                    <div class="review-card">
+                    <div class="review-card" data-review-id="${review.id}">
                         <h2 class="review-title">${review.title}</h2>
                         <div class="review-meta">
                             <div class="stars" style="margin-right: 10px;">
@@ -127,8 +136,8 @@ function getData(pageIndex) {
                             <div class="review-author">${review.user}</div>
                             <div class="review-actions">
                                 <div>
-                                    <i onClick="onLike(${JSON.stringify(review).replace(/"/g, '&quot;')})" class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span id="likeCount-${review.id}" class="count">(${review.rate ?? 0})</span>
+                                    <i class="far fa-thumbs-up like-icon"></i>
+                                    <span>Helpful</span> <span class="count" id="likeCount-${review.id}">(${review.rate ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -151,21 +160,41 @@ function getData(pageIndex) {
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = reviewHTML;
 
-                const galleryImgs = tempDiv.querySelectorAll('.review-img');
-                galleryImgs.forEach(img => {
-                    img.addEventListener('click', () => {
-                        showModalDetail(review);
-                    });
-                });
+                reviewContainer.appendChild(tempDiv.firstElementChild);
+            });
 
-                reviewContainer[0].appendChild(tempDiv.firstElementChild);
+            // ====== Event delegation cho like button ======
+            reviewContainer.addEventListener('click', function(e) {
+                const likeIcon = e.target.closest('.like-icon');
+                if (!likeIcon) return;
+
+                const reviewCard = likeIcon.closest('.review-card');
+                if (!reviewCard) return;
+
+                const likeCountEl = reviewCard.querySelector('.count');
+                if (!likeCountEl) return;
+
+                let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
+                currentRate += 1;
+                likeCountEl.textContent = `(${currentRate})`;
+            });
+
+            // ====== Event delegation cho gallery ảnh ======
+            reviewContainer.addEventListener('click', function(e) {
+                const img = e.target.closest('.review-img');
+                if (!img) return;
+
+                const reviewId = img.getAttribute('data-review-id');
+                const review = reviews.find(r => r.id == reviewId);
+                if (review) {
+                    showModalDetail(review);
+                }
             });
         })
         .catch(error => {
             console.error('Error fetching reviews:', error);
         });
 }
-
 
 function onLike(item) {
     const review = item;
