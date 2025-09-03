@@ -114,8 +114,8 @@ function getData(pageIndex) {
                             <div class="review-author">${review.user}</div>
                             <div class="review-actions">
                                 <div>
-                                    <i class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span class="count">(${review.rate ?? 0})</span>
+                                    <i onClick="onLike(${JSON.stringify(review).replace(/"/g, '&quot;')})" class="far fa-thumbs-up"></i>
+                                    <span>Helpful</span> <span id="likeCount-${review.id}" class="count">(${review.rate ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -135,6 +135,16 @@ function getData(pageIndex) {
         .catch(error => {
             console.error('Error fetching reviews:', error);
         });
+}
+
+function onLike(item) {
+    const review = item;
+    const elementLike = document.getElementById(`likeCount-${review.id}`);
+    if (elementLike) {
+        const currentRate = parseInt(elementLike.textContent.replace(/[()]/g, ""), 10) || 0;
+        const newRate = currentRate + 1;
+        elementLike.textContent = `(${newRate})`;
+    }
 }
 
 function getMoreReview() {
