@@ -52,19 +52,31 @@ function getImage() {
     fetch(`http://103.159.51.69:3000/api/media/files?type=images&pageIndex=0&pageSize=10`)
         .then(response => response.json())
         .then(data => {
-            const images = data?.data
+            const images = data?.data;
             const imageContainer = document.getElementById('imageContainer');
             if (imageContainer && Array.isArray(images)) {
-                imageContainer.innerHTML = images.map((image, idx) => {
+                imageContainer.innerHTML = '';
+                
+                images.forEach((image, idx) => {
                     const imgSrc = `${base_img}${image.filename}`;
-                    return `
-                        <div class="image-item">
-                            <img onClick="getImageDetail(${image.reviewId})" src="${imgSrc}" alt="Review image ${idx + 1}">
-                        </div>
-                    `;
-                }).join('');
+                    const imgEl = document.createElement('img');
+                    imgEl.src = imgSrc;
+                    imgEl.alt = `Review image ${idx + 1}`;
+                    imgEl.width = 160;
+                    imgEl.height = 160;
+
+                    imgEl.addEventListener('click', () => {
+                        getImageDetail(image.reviewId);
+                    });
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'image-item';
+                    wrapper.appendChild(imgEl);
+
+                    imageContainer.appendChild(wrapper);
+                });
             }
-    })
+        });
 }
 
 function getImageDetail(id) {
@@ -82,6 +94,7 @@ function getData(pageIndex) {
         .then(data => {
             const reviews = data.data.reviews;
             const reviewContainer = document.getElementsByClassName('customer-review');
+
             reviews.forEach(review => {
                 const reviewHTML = `
                     <div class="review-card">
@@ -120,15 +133,31 @@ function getData(pageIndex) {
                             </div>
                         </div>
                         <div class="review-gallery">
-                            ${review.images.map(image => `
-                                <img onclick="showModalDetail(${JSON.stringify(review).replace(/"/g, '&quot;')})" src="${base_img}${image}" alt="Review photo 1" width="160px" height="160px">
+                            ${review.images.map((image, i) => `
+                                <img 
+                                    class="review-img" 
+                                    data-review-id="${review.id}" 
+                                    data-index="${i}" 
+                                    src="${base_img}${image}" 
+                                    alt="Review photo ${i+1}" 
+                                    width="160px" 
+                                    height="160px"
+                                >
                             `).join('')}
                         </div>
-                        
                     </div>
                 `;
+
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = reviewHTML;
+
+                const galleryImgs = tempDiv.querySelectorAll('.review-img');
+                galleryImgs.forEach(img => {
+                    img.addEventListener('click', () => {
+                        showModalDetail(review);
+                    });
+                });
+
                 reviewContainer[0].appendChild(tempDiv.firstElementChild);
             });
         })
@@ -136,6 +165,7 @@ function getData(pageIndex) {
             console.error('Error fetching reviews:', error);
         });
 }
+
 
 function onLike(item) {
     const review = item;
