@@ -38,14 +38,14 @@ body {
     background: #a8a8a8;
 }
 
-.container {
+.container-app-review {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     overflow-x: hidden;
 }
 
-.star {
+.star-app-review {
     width: 50px;
     height: 50px;
     background: gold; /* nền vàng cho toàn bộ sao */
@@ -63,28 +63,28 @@ body {
     );
 }
 
-.haft-start {
+.haft-start-app-review {
     width: 50px;
     height: 50px;
 }
 
-.start.white {
+.start.white-app-review {
     background-color: white;
 }
-.title-container {
+.title-container-app-review {
     font-size: 42px;
     color: #000000;
     font-weight: bold;
     margin-bottom: 80px;
 }
 
-.reviews-section {
+.reviews-section-app-review {
     background: white;
     padding: 30px;
     border: 1px solid #e5e7eb;
 }
 
-.rating-summary {
+.rating-summary-app-review {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -94,81 +94,81 @@ body {
     margin-bottom: 30px;
 }
 
-.rating-left {
+.rating-left-app-review {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.rating-stars {
+.rating-stars-app-review {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 10px;
 }
 
-.rating-number {
+.rating-number-app-review {
     font-size: 60px;
     font-weight: bold;
     color: #000000;
 }
 
-.stars {
+.stars-app-review {
     display: flex;
     gap: 2px;
     align-items: center;
 }
 
-.review-count {
+.review-count-app-review {
     color: #7f8c8d;
     font-size: 18px;
     margin-top: -25px;
 }
 
-.rating-right {
+.rating-right-app-review {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.recommendation {
+.recommendation-app-review {
     display: flex;
     align-items: center;
     text-align: center;
 }
 
-.recommendation-circle {
+.recommendation-circle-app-review {
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.recommendation-circle span {
+.recommendation-circle-app-review span {
     color: white;
     font-size: 1.8rem;
     font-weight: bold;
 }
 
-.recommendation p {
+.recommendation-app-review p {
     color: #000000;
     font-weight: 600;
     font-size: 28px;
 }
 
 /* Video Section */
-.video-section {
+.video-section-app-review {
     margin-bottom: 40px;
 }
 
-.section-title {
+.section-title-app-review {
     font-size: 1.8rem;
     color: #2c3e50;
     margin-bottom: 25px;
     font-weight: 600;
 }
 
-.video-reviews {
+.video-reviews-app-review {
     position: relative;
     overflow-x: auto;
     overflow-y: hidden;
@@ -180,28 +180,28 @@ body {
     user-select: none;
 }
 
-.video-reviews:active {
+.video-reviews-app-review:active {
     cursor: grabbing;
 }
 
 /* Custom scrollbar cho video container - ẩn scrollbar */
-.video-reviews::-webkit-scrollbar {
+.video-reviews-app-review::-webkit-scrollbar {
     display: none;
 }
 
-.video-reviews {
+.video-reviews-app-review {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
 
-.video-reviews-container {
+.video-reviews-container-app-review {
     display: flex;
     gap: 25px;
     padding: 10px 0;
     min-width: max-content;
 }
 
-.video-item {
+.video-item-app-review {
     flex: 0 0 160px;
     background: #f8f9fa;
     border-radius: 10px;
@@ -211,19 +211,19 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.video-item:hover {
+.video-item-app-review:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-.video-thumbnail {
+.video-thumbnail-app-review {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
-.video-thumbnail video {
+.video-thumbnail-app-review video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -232,7 +232,7 @@ body {
     min-height: 285px;
 }
 
-.play-button {
+.play-button-app-review {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -250,11 +250,11 @@ body {
     transition: background 0.3s ease;
 }
 
-.play-button:hover {
+.play-button-app-review:hover {
     background: rgba(0,0,0,0.9);
 }
 
-.duration {
+.duration-app-review {
     position: absolute;
     bottom: 10px;
     right: 10px;
@@ -266,22 +266,22 @@ body {
     font-weight: 500;
 }
 
-.video-rating {
+.video-rating-app-review {
     position: absolute;
     bottom: 10px;
     padding: 15px 15px 0px;
 }
 
-.video-rating .stars {
+.video-rating-app-review .stars-app-review {
     margin-bottom: 10px;
 }
 
-.video-rating .star {
+.video-rating-app-review .star-app-review {
     width: 14px;
     height: 14px;
 }
 
-.video-description {
+.video-description-app-review {
     padding: 0 15px 15px;
     color: #555;
     font-size: 0.9rem;
@@ -290,11 +290,11 @@ body {
 
 /* Carousel navigation buttons - removed for horizontal scroll */
 
-.image-section {
+.image-section-app-review {
     margin-top: 40px;
 }
 
-.image-reviews {
+.image-reviews-app-review {
     position: relative;
     overflow-x: auto;
     overflow-y: hidden;
@@ -305,28 +305,28 @@ body {
     user-select: none;
 }
 
-.image-reviews:active {
+.image-reviews-app-review:active {
     cursor: grabbing;
 }
 
 /* Custom scrollbar cho image container - ẩn scrollbar */
-.image-reviews::-webkit-scrollbar {
+.image-reviews-app-review::-webkit-scrollbar {
     display: none;
 }
 
-.image-reviews {
+.image-reviews-app-review {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
 
-.image-reviews-container {
+.image-reviews-container-app-review {
     display: flex;
     gap: 20px;
     padding: 10px 0;
     min-width: max-content;
 }
 
-.image-item {
+.image-item-app-review {
     flex: 0 0 200px;
     position: relative;
     aspect-ratio: 1;
@@ -334,11 +334,11 @@ body {
     transition: transform 0.3s ease;
 }
 
-.image-item:hover {
+.image-item-app-review:hover {
     transform: scale(1.05);
 }
 
-.image-item img {
+.image-item-app-review img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -346,11 +346,11 @@ body {
     border-radius: 5px;
 }
 
-.customer-review {
+.customer-review-app-review {
     margin-top: 20px;
 }
 
-.review-card {
+.review-card-app-review {
     background: white;
     /* border-radius: 12px; */
     padding: 24px;
@@ -358,14 +358,14 @@ body {
     border: 1px solid #e5e7eb;
 }
 
-.review-title {
+.review-title-app-review {
     font-size: 30px;
     color: #09090b;
     margin-bottom: 12px;
     font-weight: 700;
 }
 
-.review-meta {
+.review-meta-app-review {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -373,17 +373,17 @@ body {
     margin-bottom: 5px;
 }
 
-.review-meta .star {
+.review-meta-app-review .star-app-review {
     width: 20px;
     height: 20px;
 }
 
-.review-date {
+.review-date-app-review {
     color: #737373;
     font-size: 14px;
 }
 
-.badge {
+.badge-app-review {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -392,47 +392,47 @@ body {
     font-weight: 600;
 }
 
-.badge.verified {
+.badge-app-review.verified-app-review {
     color: #218649;
     margin-right: 10px;
 }
 
-.badge.recommend {
+.badge-app-review.recommend-app-review {
     color: #218649;
 }
 
-.review-content p {
+.review-content-app-review p {
     font-size: 18px;
     color: #1a1a1a;
 }
 
-.review-author {
+.review-author-app-review {
     margin: 16px 0;
     font-size: 18px;
     font-weight: 600;
     color: #767676;
 }
 
-.review-gallery {
+.review-gallery-app-review {
     display: flex;
     gap: 16px;
     margin-top: 10px;
 }
 
-.review-gallery img {
+.review-gallery-app-review img {
     width: 160px;
     height: 160px;
     object-fit: cover;
 }
 
-.review-actions {
+.review-actions-app-review {
     display: flex;
     justify-content: flex-end;
     margin-top: 14px;
     cursor: pointer;
 }
 
-.view-more {
+.view-more-app-review {
     color: #000000;
     background-color: #ffffff;
     border: 1px solid #000000;
@@ -442,190 +442,190 @@ body {
 }
 
 @media (max-width: 768px) {
-    .container {
+    .container-app-review {
         padding: 15px;
     }
     
-    .reviews-section {
+    .reviews-section-app-review {
         padding: 20px;
     }
 
-    .title-container {
+    .title-container-app-review {
         font-size: 30px;
     }
     
-    .rating-summary {
+    .rating-summary-app-review {
         text-align: center;
         padding: 0px 0px 20px;
         margin-bottom: 20px;
     }
 
-    .review-content p {
+    .review-content-app-review p {
         font-size: 14px;
         color: #1a1a1a;
     }
 
-    .review-author {
+    .review-author-app-review {
         font-size: 14px;
     }
     
-    .rating-number {
+    .rating-number-app-review {
         font-size: 2.5rem;
     }
     
-    .recommendation-circle {
+    .recommendation-circle-app-review {
         width: 70px;
         height: 70px;
     }
     
-    .recommendation-circle span {
+    .recommendation-circle-app-review span {
         font-size: 1.5rem;
     }
     
-    .section-title {
+    .section-title-app-review {
         font-size: 1.5rem;
     }
     
-    .video-reviews, .image-reviews {
+    .video-reviews-app-review, .image-reviews-app-review {
         padding: 0 20px;
     }
 
-    .review-card {
+    .review-card-app-review {
         padding: 20px;
     }
-    .review-title {
+    .review-title-app-review {
         font-size: 16px;
     }
 
-    .review-gallery img {
+    .review-gallery-app-review img {
         width: 100px;
         height: 100px;
     }
 
-    .modal-content {
+    .modal-content-app-review {
         width: 95%;
         margin: 10% auto;
     }
     
-    .modal-header {
+    .modal-header-app-review {
         padding: 15px 20px 10px;
     }
     
-    .modal-body {
+    .modal-body-app-review {
         padding: 15px 20px 20px;
     }
     
-    .modal-header h2 {
+    .modal-header-app-review h2 {
         font-size: 1.5rem;
     }
     
-    .modal-meta {
+    .modal-meta-app-review {
         grid-template-columns: 1fr;
         gap: 10px;
     }
     
-    .gallery-grid {
+    .gallery-grid-app-review {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 10px;
     }
 }
 
 @media (max-width: 480px) {
-    .reviews-section {
+    .reviews-section-app-review {
         padding: 15px;
     }
 
-    .title-container {
+    .title-container-app-review {
         font-size: 30px;
         margin-bottom: 10px;
     }
     
-    .rating-summary {
+    .rating-summary-app-review {
         padding: 0px 0px 20px;
         margin-bottom: 0px;
     }
 
-    .review-content p {
+    .review-content-app-review p {
         font-size: 14px;
         color: #1a1a1a;
     }
 
-    .review-author {
+    .review-author-app-review {
         font-size: 14px;
     }
     
-    .rating-number {
+    .rating-number-app-review {
         font-size: 2rem;
     }
     
-    .rating-stars .star {
+    .rating-stars-app-review .star-app-review {
         width: 26px;
         height: 26px;
     }
 
-    .haft-start {
+    .haft-start-app-review {
         width: 26px;
         height: 26px;
     }
     
-    .recommendation-circle {
+    .recommendation-circle-app-review {
         width: 60px;
         height: 60px;
     }
     
-    .recommendation-circle span {
+    .recommendation-circle-app-review span {
         font-size: 1.2rem;
     }
 
-    .recommendation p {
+    .recommendation-app-review p {
         font-size: 18px;
     }
     
-    .video-reviews, .image-reviews {
+    .video-reviews-app-review, .image-reviews-app-review {
         padding: 0 15px;
     }
     
-    .video-section, .image-section {
+    .video-section-app-review, .image-section-app-review {
         margin-bottom: 30px;
     }
 
-    .review-title {
+    .review-title-app-review {
         font-size: 16px;
     }
-    .review-actions {
+    .review-actions-app-review {
         justify-content: flex-start;
     }
 
-    .review-gallery img {
+    .review-gallery-app-review img {
         width: 70px;
         height: 70px;
     }
 
-    .modal-content {
+    .modal-content-app-review {
         width: 98%;
         margin: 15% auto;
     }
     
-    .modal-header {
+    .modal-header-app-review {
         padding: 12px 15px 8px;
     }
     
-    .modal-body {
+    .modal-body-app-review {
         padding: 12px 15px 15px;
     }
     
-    .modal-header h2 {
+    .modal-header-app-review h2 {
         font-size: 1.3rem;
     }
     
-    .gallery-grid {
+    .gallery-grid-app-review {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
         gap: 8px;
     }
 }
 
 /* Modal Styles */
-.modal {
+.modal-app-review {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -637,7 +637,7 @@ body {
     overflow: hidden;
 }
 
-.modal-content {
+.modal-content-app-review {
     background-color: #fefefe;
     margin: 5vh auto;
     padding: 0;
@@ -653,25 +653,25 @@ body {
     scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
-.modal-content::-webkit-scrollbar {
+.modal-content-app-review::-webkit-scrollbar {
     width: 6px;
 }
 
-.modal-content::-webkit-scrollbar-track {
+.modal-content-app-review::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 3px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
+.modal-content-app-review::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 3px;
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
+.modal-content-app-review::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
 
-.close {
+.close-app-review {
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -683,28 +683,28 @@ body {
     z-index: 1001;
 }
 
-.close:hover,
-.close:focus {
+.close-app-review:hover,
+.close-app-review:focus {
     color: #000;
     text-decoration: none;
 }
 
-.modal-header {
+.modal-header-app-review {
     padding: 20px 30px 15px;
     border-bottom: 1px solid #eee;
 }
 
-.modal-header h2 {
+.modal-header-app-review h2 {
     margin: 0;
     color: #2c3e50;
     font-size: 1.8rem;
 }
 
-.modal-body {
+.modal-body-app-review {
     padding: 20px 30px 30px;
 }
 
-.modal-rating {
+.modal-rating-app-review {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -714,70 +714,70 @@ body {
     border-radius: 8px;
 }
 
-.modal-rating .stars {
+.modal-rating-app-review .stars-app-review {
     display: flex;
     gap: 3px;
 }
 
-.modal-rating .stars i {
+.modal-rating-app-review .stars-app-review i {
     font-size: 1.3rem;
     color: #fde047;
 }
 
-.rating-text {
+.rating-text-app-review {
     font-size: 1.1rem;
     font-weight: 600;
     color: #2c3e50;
 }
 
-.modal-meta {
+.modal-meta-app-review {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
     margin-bottom: 25px;
 }
 
-.meta-item {
+.meta-item-app-review {
     padding: 12px;
     background: #f8f9fa;
     border-radius: 6px;
     border-left: 4px solid #218649;
 }
 
-.meta-item strong {
+.meta-item-app-review strong {
     color: #2c3e50;
     margin-right: 8px;
 }
 
-.modal-description {
+.modal-description-app-review {
     margin-bottom: 25px;
 }
 
-.modal-description h3 {
+.modal-description-app-review h3 {
     color: #2c3e50;
     margin-bottom: 10px;
     font-size: 1.3rem;
 }
 
-.modal-description p {
+.modal-description-app-review p {
     line-height: 1.6;
     color: #555;
     font-size: 1rem;
 }
 
-.modal-gallery h3 {
+.modal-gallery-app-review h3 {
     color: #2c3e50;
     margin-bottom: 15px;
     font-size: 1.3rem;
 }
 
-.gallery-grid {
+.gallery-grid-app-review {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
 }
 
-.gallery-item {
+.gallery-item-app-review {
     aspect-ratio: 1;
     border-radius: 8px;
     overflow: hidden;
@@ -785,18 +785,18 @@ body {
     transition: transform 0.2s ease;
 }
 
-.gallery-item:hover {
+.gallery-item-app-review:hover {
     transform: scale(1.05);
 }
 
-.gallery-item img {
+.gallery-item-app-review img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
 /* Lightbox Styles */
-.lightbox {
+.lightbox-app-review {
     position: fixed;
     z-index: 2000;
     left: 0;
@@ -810,13 +810,13 @@ body {
     overflow: hidden;
 }
 
-.lightbox-content {
+.lightbox-content-app-review {
     position: relative;
     max-width: 90%;
     max-height: 90%;
 }
 
-.lightbox-close {
+.lightbox-close-app-review {
     position: absolute;
     top: -40px;
     right: 0;
@@ -827,19 +827,19 @@ body {
     z-index: 2001;
 }
 
-.lightbox-content img {
+.lightbox-content-app-review img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     border-radius: 8px;
 }
 
-.review-modal {
+.review-modal-app-review {
     display: flex;
     flex-direction: column;
 }
 
-.modal-topbar {
+.modal-topbar-app-review {
     position: sticky;
     top: 0;
     background: #ffffff;
@@ -851,7 +851,7 @@ body {
     border-bottom: 1px solid #eee;
 }
 
-.modal-topbar .back-btn {
+.modal-topbar-app-review .back-btn-app-review {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -860,31 +860,31 @@ body {
     border-radius: 8px;
 }
 
-.modal-topbar .topbar-title {
+.modal-topbar-app-review .topbar-title-app-review {
     font-size: 20px;
     font-weight: 600;
     color: #111;
 }
 
-.review-modal-body {
+.review-modal-body-app-review {
     display: grid;
     grid-template-columns: 1.15fr 1fr;
     gap: 24px;
     padding: 20px 24px 24px;
 }
 
-.modal-media {
+.modal-media-app-review {
     display: flex;
     flex-direction: column;
 }
 
-.media-viewer {
+.media-viewer-app-review {
     position: relative;
     background: #000;
     overflow: hidden;
 }
 
-.media-viewer img {
+.media-viewer-app-review img {
     width: 100%;
     height: 520px;
     object-fit: contain;
@@ -892,7 +892,7 @@ body {
     display: block;
 }
 
-.media-nav {
+.media-nav-app-review {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -908,17 +908,17 @@ body {
     cursor: pointer;
 }
 
-.media-nav.prev { left: 12px; }
-.media-nav.next { right: 12px; }
+.media-nav-app-review.prev-app-review { left: 12px; }
+.media-nav-app-review.next-app-review { right: 12px; }
 
-.media-thumbs {
+.media-thumbs-app-review {
     display: flex;
     gap: 10px;
     padding-top: 12px;
     overflow-x: auto;
 }
 
-.media-thumbs img {
+.media-thumbs-app-review img {
     width: 90px;
     height: 90px;
     object-fit: cover;
@@ -927,12 +927,12 @@ body {
     cursor: pointer;
 }
 
-.media-thumbs img.active {
+.media-thumbs-app-review img.active-app-review {
     border-color: #111;
     opacity: 1;
 }
 
-.modal-details .detail-title {
+.modal-details-app-review .detail-title-app-review {
     font-size: 2rem;
     line-height: 1.2;
     color: #111;
@@ -940,7 +940,7 @@ body {
     font-weight: 800;
 }
 
-.detail-meta-line {
+.detail-meta-line-app-review {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -948,42 +948,42 @@ body {
     margin-bottom: 14px;
 }
 
-.detail-meta-line .star { 
+.detail-meta-line-app-review .star-app-review { 
     width: 20px; 
     height: 20px;
 }
-.detail-meta-line .review-date { color: #737373; font-size: 14px; }
+.detail-meta-line-app-review .review-date-app-review { color: #737373; font-size: 14px; }
 
-.detail-text {
+.detail-text-app-review {
     font-size: 16px;
     color: #1a1a1a;
     line-height: 1.6;
 }
 
-.detail-footer {
+.detail-footer-app-review {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 16px;
 }
 
-.detail-footer .author { color: #767676; font-weight: 600; }
-.detail-footer .helpful { cursor: pointer; }
+.detail-footer-app-review .author-app-review { color: #767676; font-weight: 600; }
+.detail-footer-app-review .helpful-app-review { cursor: pointer; }
 
 @media (max-width: 1024px) {
-    .review-modal-body {
+    .review-modal-body-app-review {
         grid-template-columns: 1fr;
     }
-    .media-viewer img { height: 420px; }
+    .media-viewer-app-review img { height: 420px; }
 }
 
 @media (max-width: 600px) {
-    .media-viewer img { height: 300px; }
-    .modal-details {
+    .media-viewer-app-review img { height: 300px; }
+    .modal-details-app-review {
         margin-top: 24px;
     }
-    .modal-details .detail-title { font-size: 1.5rem; }
-    .review-modal-body {
+    .modal-details-app-review .detail-title-app-review { font-size: 1.5rem; }
+    .review-modal-body-app-review {
         display: block;
     }
 }

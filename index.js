@@ -1,6 +1,6 @@
 var pageIndex = 0;
-var base_img = 'http://103.159.51.69:3000/uploads/images/'
-var base_video = 'http://103.159.51.69:3000/uploads/videos/'
+var base_img = 'https://api.autocaruniverse.cloud/uploads/images/'
+var base_video = 'https://api.autocaruniverse.cloud/uploads/videos/'
 
 document.addEventListener('DOMContentLoaded', function() {
     getVideo();
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function getVideo() {
-    fetch(`http://103.159.51.69:3000/api/media/files?type=videos&pageIndex=0&pageSize=10`)
+    fetch(`https://api.autocaruniverse.cloud/api/media/files?type=videos&pageIndex=0&pageSize=10`)
         .then(response => response.json())
         .then(data => {
             const videos = data?.data;
@@ -23,12 +23,12 @@ function getVideo() {
                     const thumbnail = `${base_video}${video.filename}`;
 
                     const videoItem = document.createElement('div');
-                    videoItem.className = 'video-item';
+                    videoItem.className = 'video-item-app-review';
 
                     videoItem.addEventListener('click', () => showModalvideo(thumbnail));
 
                     videoItem.innerHTML = `
-                        <div class="video-thumbnail">
+                        <div class="video-thumbnail-app-review">
                             <video 
                                 src="${thumbnail}" 
                                 controls 
@@ -40,9 +40,9 @@ function getVideo() {
                                 Your browser does not support the video tag.
                             </video>
                         </div>
-                        <div class="video-rating">
-                            <div class="stars">
-                                ${[...Array(5)].map(() => '<div class="star"></div>').join('')}
+                        <div class="video-rating-app-review">
+                            <div class="stars-app-review">
+                                ${[...Array(5)].map(() => '<div class="star-app-review"></div>').join('')}
                             </div>
                         </div>
                     `;
@@ -57,7 +57,7 @@ function getVideo() {
 }
 
 function getImage() {
-    fetch(`http://103.159.51.69:3000/api/media/files?type=images&pageIndex=0&pageSize=10`)
+    fetch(`https://api.autocaruniverse.cloud/api/media/files?type=images&pageIndex=0&pageSize=10`)
         .then(response => response.json())
         .then(data => {
             const images = data?.data;
@@ -78,7 +78,7 @@ function getImage() {
                     });
 
                     const wrapper = document.createElement('div');
-                    wrapper.className = 'image-item';
+                    wrapper.className = 'image-item-app-review';
                     wrapper.appendChild(imgEl);
 
                     imageContainer.appendChild(wrapper);
@@ -88,7 +88,7 @@ function getImage() {
 }
 
 function getImageDetail(id) {
-    fetch(`http://103.159.51.69:3000/api/reviews/${id}`)
+    fetch(`https://api.autocaruniverse.cloud/api/reviews/${id}`)
         .then(response => response.json())
         .then(data => {
             const review = data.data
@@ -97,20 +97,20 @@ function getImageDetail(id) {
 }
 
 function getData(pageIndex) {
-    fetch(`http://103.159.51.69:3000/api/reviews?pageIndex=${pageIndex}&pageSize=8`)
+    fetch(`https://api.autocaruniverse.cloud/api/reviews?pageIndex=${pageIndex}&pageSize=8`)
         .then(response => response.json())
         .then(data => {
             const reviews = data.data.reviews;
-            const reviewContainer = document.getElementsByClassName('customer-review')[0];
+            const reviewContainer = document.getElementsByClassName('customer-review-app-review')[0];
 
             reviews.forEach(review => {
                 // Tạo HTML review card
                 const reviewHTML = `
-                    <div class="review-card" data-review-id="${review.id}">
-                        <h2 class="review-title">${review.title}</h2>
-                        <div class="review-meta">
-                            <div class="stars" style="margin-right: 10px;">
-                                ${[...Array(review.rate)].map(() => '<div class="star"></div>').join('')}
+                    <div class="review-card-app-review" data-review-id="${review.id}">
+                        <h2 class="review-title-app-review">${review.title}</h2>
+                        <div class="review-meta-app-review">
+                            <div class="stars-app-review" style="margin-right: 10px;">
+                                ${[...Array(review.rate)].map(() => '<div class="star-app-review"></div>').join('')}
                                 ${[...Array(5 - review.rate)].map(() => `
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
                                         <polygon 
@@ -123,28 +123,28 @@ function getData(pageIndex) {
                                     </svg>
                                 `).join('')}
                             </div>
-                            <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            <span class="review-date-app-review">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         </div>
-                        <div class="review-meta">
-                            ${review.verified_purchase !== 0 ? `<span class="badge verified">Verified Purchase</span>` : ''}
-                            ${review.would_recommend !== 0 ? `<span class="badge recommend"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
+                        <div class="review-meta-app-review">
+                            ${review.verified_purchase !== 0 ? `<span class="badge verified-app-review">Verified Purchase</span>` : ''}
+                            ${review.would_recommend !== 0 ? `<span class="badge recommend-app-review"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
                         </div>
-                        <div class="review-content">
+                        <div class="review-content-app-review">
                             <p>${review.description ?? ''}</p>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <div class="review-author">${review.user}</div>
-                            <div class="review-actions">
+                            <div class="review-author-app-review">${review.user}</div>
+                            <div class="review-actions-app-review">
                                 <div>
-                                    <i class="far fa-thumbs-up like-icon"></i>
-                                    <span>Helpful</span> <span class="count" id="likeCount-${review.id}">(${review.rate ?? 0})</span>
+                                    <i class="far fa-thumbs-up like-icon-app-review"></i>
+                                    <span>Helpful</span> <span class="count-app-review" id="likeCount-${review.id}">(${review.rate ?? 0})</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="review-gallery">
+                        <div class="review-gallery-app-review">
                             ${review.images.map((image, i) => `
                                 <img 
-                                    class="review-img" 
+                                    class="review-img-app-review" 
                                     data-review-id="${review.id}" 
                                     data-index="${i}" 
                                     src="${base_img}${image}" 
@@ -164,13 +164,13 @@ function getData(pageIndex) {
             });
 
             reviewContainer.addEventListener('click', function(e) {
-                const likeIcon = e.target.closest('.like-icon');
+                const likeIcon = e.target.closest('.like-icon-app-review');
                 if (!likeIcon) return;
 
-                const reviewCard = likeIcon.closest('.review-card');
+                const reviewCard = likeIcon.closest('.review-card-app-review');
                 if (!reviewCard) return;
 
-                const likeCountEl = reviewCard.querySelector('.count');
+                const likeCountEl = reviewCard.querySelector('.count-app-review');
                 if (!likeCountEl) return;
 
                 let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
@@ -179,7 +179,7 @@ function getData(pageIndex) {
             });
 
             reviewContainer.addEventListener('click', function(e) {
-                const img = e.target.closest('.review-img');
+                const img = e.target.closest('.review-img-app-review');
                 if (!img) return;
 
                 const reviewId = img.getAttribute('data-review-id');
@@ -202,37 +202,37 @@ function getMoreReview() {
 function showModalvideo(videoSrc) {
     const modal = document.getElementById('reviewModal');
     const modalContent = document.getElementById('modalContent');
-    const modalContentWrapper = modalContent.closest('.modal-content');
+    const modalContentWrapper = modalContent.closest('.modal-content-app-review');
     if (modalContentWrapper) {
         modalContentWrapper.style.maxWidth = '800px';
     }
 
     modalContent.innerHTML = `
-        <div class="review-modal">
-            <div class="modal-topbar">
-                <button class="back-btn" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+        <div class="review-modal-app-review">
+            <div class="modal-topbar-app-review">
+                <button class="back-btn-app-review" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <span class="topbar-title">Video</span>
+                <span class="topbar-title-app-review">Video</span>
             </div>
             <div style="padding: 20px 24px 24px">
-                <div class="modal-media">
-                    <div class="media-viewer">
+                <div class="modal-media-app-review">
+                    <div class="media-viewer-app-review">
                         <video id="modalMainVideo" src="${videoSrc}" controls autoplay style="width: 100%; height: 520px; object-fit: contain; background: #000; display: block;"></video>
                     </div>
                 </div>
-                <div class="modal-details"></div>
+                <div class="modal-details-app-review"></div>
             </div>
         </div>
     `;
     
     modal.style.display = 'block';
     
-    const closeBtn = document.querySelector('.close');
+    const closeBtn = document.querySelector('.close-app-review');
     if (closeBtn) {
         closeBtn.onclick = function() {
             modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
+            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content-app-review');
             if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
         }
     }
@@ -240,7 +240,7 @@ function showModalvideo(videoSrc) {
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
+            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content-app-review');
             if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
         }
     }
@@ -248,7 +248,7 @@ function showModalvideo(videoSrc) {
     const handleEsc = function(e) {
         if (e.key === 'Escape') {
             modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content');
+            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content-app-review');
             if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
             document.removeEventListener('keydown', handleEsc);
         }
@@ -261,26 +261,26 @@ function showModalDetail(review) {
     const modalContent = document.getElementById('modalContent');
     
     modalContent.innerHTML = `
-        <div class="review-modal">
-            <div class="modal-topbar" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
-                <button class="back-btn" aria-label="Back" >
+        <div class="review-modal-app-review">
+            <div class="modal-topbar-app-review" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+                <button class="back-btn-app-review" aria-label="Back" >
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <span class="topbar-title">All Photos</span>
+                <span class="topbar-title-app-review">All Photos</span>
             </div>
-            <div class="review-modal-body">
-                <div class="modal-media">
-                    <div class="media-viewer">
+            <div class="review-modal-body-app-review">
+                <div class="modal-media-app-review">
+                    <div class="media-viewer-app-review">
                         <img id="modalMainImg" src="${base_img}${review.images[0]}" alt="review image">
-                        <button class="media-nav prev" id="mediaPrev"><i class="fas fa-chevron-left"></i></button>
-                        <button class="media-nav next" id="mediaNext"><i class="fas fa-chevron-right"></i></button>
+                        <button class="media-nav prev-app-review" id="mediaPrev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="media-nav next-app-review" id="mediaNext"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div class="modal-details">
-                    <div class="detail-title">${review.title}</div>
-                    <div class="detail-meta-line">
-                        <div class="stars">
-                        ${[...Array(review.rate)].map(() => '<div class="star"></div>').join('')}
+                <div class="modal-details-app-review">
+                    <div class="detail-title-app-review">${review.title}</div>
+                    <div class="detail-meta-line-app-review">
+                        <div class="stars-app-review">
+                        ${[...Array(review.rate)].map(() => '<div class="star-app-review"></div>').join('')}
                         ${[...Array(5 - review.rate)].map(() => `
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
                                 <polygon 
@@ -293,21 +293,21 @@ function showModalDetail(review) {
                             </svg>
                         `).join('')}
                         </div>
-                        <span class="review-date">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                        <span class="review-date-app-review">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         
                     </div>
-                    <div class="detail-meta-line">
-                        ${review.verified_purchase !== 0 ? `<span class="badge verified">Verified Purchase</span>` : ''}
-                        ${review.would_recommend !== 0 ? `<span class="badge recommend"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
+                    <div class="detail-meta-line-app-review">
+                        ${review.verified_purchase !== 0 ? `<span class="badge verified-app-review">Verified Purchase</span>` : ''}
+                        ${review.would_recommend !== 0 ? `<span class="badge recommend-app-review"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
                     </div>
-                    <div class="detail-text">${review.description}</div>
-                    <div class="detail-footer">
-                        <div class="author">${review.user}</div>
-                        <div class="helpful"><i class="far fa-thumbs-up"></i> Helpful <span class="count">(${review.rate ?? 0})</span></div>
+                    <div class="detail-text-app-review">${review.description}</div>
+                    <div class="detail-footer-app-review">
+                        <div class="author-app-review">${review.user}</div>
+                        <div class="helpful-app-review"><i class="far fa-thumbs-up"></i> Helpful <span class="count-app-review">(${review.rate ?? 0})</span></div>
                     </div>
-                    <div class="media-thumbs" id="mediaThumbs">
+                    <div class="media-thumbs-app-review" id="mediaThumbs">
                         ${review.images.map((image, i) => `
-                            <img data-index="${i}" class="${i===0 ? 'active' : ''}" src="${base_img}${image}" alt="thumb ${i+1}">
+                            <img data-index="${i}" class="${i===0 ? 'active-app-review' : ''}" src="${base_img}${image}" alt="thumb ${i+1}">
                         `).join('')}
                     </div>
                 </div>
@@ -317,7 +317,7 @@ function showModalDetail(review) {
     
     modal.style.display = 'block';
     
-    const closeBtn = document.querySelector('.close');
+    const closeBtn = document.querySelector('.close-app-review');
     closeBtn.onclick = function() {
         modal.style.display = 'none';
     }
@@ -347,8 +347,8 @@ function showModalDetail(review) {
         currentIndex = (index + totalImages) % totalImages;
         mainImg.src = `${base_img}${review.images[currentIndex]}`;
         thumbs.forEach((t, i) => {
-            if (i === currentIndex) t.classList.add('active');
-            else t.classList.remove('active');
+            if (i === currentIndex) t.classList.add('active-app-review');
+            else t.classList.remove('active-app-review');
         });
     }
 
@@ -369,7 +369,7 @@ function showModalDetail(review) {
 }
 
 function initDragScroll() {
-    const containers = document.querySelectorAll('.video-reviews, .image-reviews');
+    const containers = document.querySelectorAll('.video-reviews-app-review, .image-reviews-app-review');
     
     containers.forEach(container => {
         let isDown = false;
@@ -405,10 +405,10 @@ function initDragScroll() {
 
 function openImageLightbox(imageSrc) {
     const lightbox = document.createElement('div');
-    lightbox.className = 'lightbox';
+    lightbox.className = 'lightbox-app-review';
     lightbox.innerHTML = `
-        <div class="lightbox-content">
-            <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content-app-review">
+            <span class="lightbox-close-app-review">&times;</span>
             <img src="${imageSrc}" alt="Full size image">
         </div>
     `;
@@ -419,7 +419,7 @@ function openImageLightbox(imageSrc) {
         document.body.removeChild(lightbox);
     };
     
-    lightbox.querySelector('.lightbox-close').onclick = closeLightbox;
+    lightbox.querySelector('.lightbox-close-app-review').onclick = closeLightbox;
     lightbox.onclick = (e) => {
         if (e.target === lightbox) closeLightbox();
     };
