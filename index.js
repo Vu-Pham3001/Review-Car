@@ -18,14 +18,15 @@ function getVideo() {
             const videoContainer = document.getElementById('videoContainer');
             if (videoContainer && Array.isArray(videos)) {
                 videoContainer.innerHTML = '';
-                
+
                 videos.forEach((video, idx) => {
                     const thumbnail = `${base_video}${video.filename}`;
 
                     const videoItem = document.createElement('div');
                     videoItem.className = 'video-item-app-review';
 
-                    videoItem.addEventListener('click', () => showModalvideo(thumbnail));
+                    // truyền thêm index và mảng videos
+                    videoItem.addEventListener('click', () => showModalvideo(videos, idx));
 
                     videoItem.innerHTML = `
                         <div class="video-thumbnail-app-review">
@@ -55,6 +56,7 @@ function getVideo() {
             console.error('Error loading videos:', error);
         });
 }
+
 
 function getImage() {
     fetch(`https://api.autocaruniverse.cloud/api/media/files?type=images&pageIndex=0&pageSize=10`)
@@ -126,8 +128,8 @@ function getData(pageIndex) {
                             <span class="review-date-app-review">${new Date(review.modified).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         </div>
                         <div class="review-meta-app-review">
-                            ${review.verified_purchase !== 0 ? `<span class="badge verified-app-review">Verified Purchase</span>` : ''}
-                            ${review.would_recommend !== 0 ? `<span class="badge recommend-app-review"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
+                            ${review.verified_purchase !== 0 ? `<span class="badge-app-review verified-app-review">Verified Purchase</span>` : ''}
+                            ${review.would_recommend !== 0 ? `<span class="badge-app-review recommend-app-review"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
                         </div>
                         <div class="review-content-app-review">
                             <p>${review.description ?? ''}</p>
@@ -135,8 +137,8 @@ function getData(pageIndex) {
                         <div style="display: flex; justify-content: space-between;">
                             <div class="review-author-app-review">${review.user}</div>
                             <div class="review-actions-app-review">
-                                <div>
-                                    <i class="far fa-thumbs-up like-icon-app-review"></i>
+                                <div class="like-icon-app-review">
+                                    <i class="far fa-thumbs-up"></i>
                                     <span>Helpful</span> <span class="count-app-review" id="likeCount-${review.id}">(${review.rate ?? 0})</span>
                                 </div>
                             </div>
@@ -173,6 +175,12 @@ function getData(pageIndex) {
                 const likeCountEl = reviewCard.querySelector('.count-app-review');
                 if (!likeCountEl) return;
 
+                if (likeIcon.getAttribute('data-liked') === 'true') {
+                    return;
+                }
+
+                likeIcon.setAttribute('data-liked', 'true');
+
                 let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
                 currentRate += 1;
                 likeCountEl.textContent = `(${currentRate})`;
@@ -199,7 +207,9 @@ function getMoreReview() {
     getData(pageIndex + 1);
 }
 
-function showModalvideo(videoSrc) {
+function showModalvideo(videos, startIndex) {
+    let currentIndex = startIndex;
+
     const modal = document.getElementById('reviewModal');
     const modalContent = document.getElementById('modalContent');
     const modalContentWrapper = modalContent.closest('.modal-content-app-review');
@@ -207,48 +217,80 @@ function showModalvideo(videoSrc) {
         modalContentWrapper.style.maxWidth = '800px';
     }
 
-    modalContent.innerHTML = `
-        <div class="review-modal-app-review">
-            <div class="modal-topbar-app-review">
-                <button class="back-btn-app-review" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <span class="topbar-title-app-review">Video</span>
-            </div>
-            <div style="padding: 20px 24px 24px">
-                <div class="modal-media-app-review">
-                    <div class="media-viewer-app-review">
-                        <video id="modalMainVideo" src="${videoSrc}" controls autoplay style="width: 100%; height: 520px; object-fit: contain; background: #000; display: block;"></video>
+    function pauseAllOutsideVideos() {
+        document.querySelectorAll('#videoContainer video').forEach(v => {
+            v.pause();
+            v.currentTime = 0;
+        });
+    }
+
+    function renderVideo(index) {
+        pauseAllOutsideVideos();
+        const videoSrc = `${base_video}${videos[index].filename}`;
+        modalContent.innerHTML = `
+            <div class="review-modal-app-review">
+                <div class="modal-topbar-app-review">
+                    <button class="back-btn-app-review" aria-label="Back" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <span class="topbar-title-app-review">Video</span>
+                </div>
+                <div style="padding: 20px 24px 24px">
+                    <div class="modal-media-app-review">
+                        <div class="media-viewer-app-review" style="position: relative;">
+                            <video id="modalMainVideo" src="${videoSrc}" controls autoplay style="width: 100%; height: 520px; object-fit: contain; background: #000; display: block;"></video>
+                            <button class="media-nav-app-review prev-app-review" id="mediaPrev" style="position:absolute;top:50%;left:10px;transform:translateY(-50%)">
+                                <i class="fas fa-chevron-left" style="font-size: 45px; color: white;"></i>
+                            </button>
+                            <button class="media-nav-app-review next-app-review" id="mediaNext" style="position:absolute;top:50%;right:10px;transform:translateY(-50%)">
+                                <i class="fas fa-chevron-right" style="font-size: 45px; color: white;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-details-app-review"></div>
             </div>
-        </div>
-    `;
-    
+        `;
+
+        // prev / next
+        const prevBtn = document.getElementById('mediaPrev');
+        const nextBtn = document.getElementById('mediaNext');
+
+        if (prevBtn) {
+            prevBtn.onclick = () => {
+                currentIndex = (currentIndex - 1 + videos.length) % videos.length;
+                renderVideo(currentIndex);
+            };
+        }
+        if (nextBtn) {
+            nextBtn.onclick = () => {
+                currentIndex = (currentIndex + 1) % videos.length;
+                renderVideo(currentIndex);
+            };
+        }
+    }
+
     modal.style.display = 'block';
-    
+    renderVideo(currentIndex);
+
+    // đóng modal
     const closeBtn = document.querySelector('.close-app-review');
     if (closeBtn) {
         closeBtn.onclick = function() {
             modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content-app-review');
             if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
-        }
+        };
     }
-    
+
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content-app-review');
             if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
         }
-    }
-    
+    };
+
     const handleEsc = function(e) {
         if (e.key === 'Escape') {
             modal.style.display = 'none';
-            const modalContentWrapper = document.getElementById('modalContent').closest('.modal-content-app-review');
             if (modalContentWrapper) modalContentWrapper.style.maxWidth = '1280px';
             document.removeEventListener('keydown', handleEsc);
         }
@@ -256,9 +298,14 @@ function showModalvideo(videoSrc) {
     document.addEventListener('keydown', handleEsc);
 }
 
+
 function showModalDetail(review) {
     const modal = document.getElementById('reviewModal');
     const modalContent = document.getElementById('modalContent');
+    const modalContentApp = document.getElementsByClassName('modal-content-app-review')[0];
+    if (modalContentApp) {
+        modalContentApp.classList.add('modal-image-app-review');
+    }
     
     modalContent.innerHTML = `
         <div class="review-modal-app-review">
@@ -272,8 +319,8 @@ function showModalDetail(review) {
                 <div class="modal-media-app-review">
                     <div class="media-viewer-app-review">
                         <img id="modalMainImg" src="${base_img}${review.images[0]}" alt="review image">
-                        <button class="media-nav prev-app-review" id="mediaPrev"><i class="fas fa-chevron-left"></i></button>
-                        <button class="media-nav next-app-review" id="mediaNext"><i class="fas fa-chevron-right"></i></button>
+                        <button class="media-nav-app-review prev-app-review" id="mediaPrev"><i class="fas fa-chevron-left" style="font-size: 45px;"></i></button>
+                        <button class="media-nav-app-review next-app-review" id="mediaNext"><i class="fas fa-chevron-right" style="font-size: 45px;"></i></button>
                     </div>
                 </div>
                 <div class="modal-details-app-review">
@@ -297,8 +344,8 @@ function showModalDetail(review) {
                         
                     </div>
                     <div class="detail-meta-line-app-review">
-                        ${review.verified_purchase !== 0 ? `<span class="badge verified-app-review">Verified Purchase</span>` : ''}
-                        ${review.would_recommend !== 0 ? `<span class="badge recommend-app-review"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
+                        ${review.verified_purchase !== 0 ? `<span class="badge-app-review verified-app-review">Verified Purchase</span>` : ''}
+                        ${review.would_recommend !== 0 ? `<span class="badge-app-review recommend-app-review"><i class="fas fa-check-circle"></i> Would recommend</span>` : ''}
                     </div>
                     <div class="detail-text-app-review">${review.description}</div>
                     <div class="detail-footer-app-review">
@@ -316,15 +363,29 @@ function showModalDetail(review) {
     `;
     
     modal.style.display = 'block';
+
+    const helpfulBtn = modalContent.querySelector('.helpful-app-review');
+    helpfulBtn.addEventListener('click', function () {
+        if (helpfulBtn.getAttribute('data-liked') === 'true') return;
+
+        const likeCountEl = helpfulBtn.querySelector('.count-app-review');
+        let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
+        currentRate += 1;
+        likeCountEl.textContent = `(${currentRate})`;
+
+        helpfulBtn.setAttribute('data-liked', 'true');
+    });
     
     const closeBtn = document.querySelector('.close-app-review');
     closeBtn.onclick = function() {
         modal.style.display = 'none';
+        modalContentApp.classList.remove('modal-image-app-review');
     }
     
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = 'none';
+            modalContentApp.classList.remove('modal-image-app-review');
         }
     }
 
