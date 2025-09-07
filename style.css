@@ -993,3 +993,31 @@ body {
         display: block;
     }
 }
+
+.review-images-app-review {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.review-images-app-review img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 1024px) {
+    .review-images-app-review {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+@media (max-width: 600px) {
+    .review-images-app-review {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+}

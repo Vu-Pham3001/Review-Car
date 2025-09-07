@@ -21,11 +21,12 @@ function getVideo() {
 
                 videos.forEach((video, idx) => {
                     const thumbnail = `${base_video}${video.filename}`;
+                    const postterImg = `${base_img}${video.frame}`;
+
 
                     const videoItem = document.createElement('div');
                     videoItem.className = 'video-item-app-review';
 
-                    // truyền thêm index và mảng videos
                     videoItem.addEventListener('click', () => showModalvideo(videos, idx));
 
                     videoItem.innerHTML = `
@@ -35,7 +36,7 @@ function getVideo() {
                                 controls 
                                 width="180" 
                                 height="120" 
-                                poster="" 
+                                poster="${postterImg}" 
                                 style="border-radius: 8px; background: #000;"
                             >
                                 Your browser does not support the video tag.
@@ -90,12 +91,50 @@ function getImage() {
 }
 
 function getImageDetail(id) {
-    fetch(`https://api.autocaruniverse.cloud/api/reviews/${id}`)
+    fetch(`https://api.autocaruniverse.cloud/api/media/files?type=images&isFull=true`)
         .then(response => response.json())
         .then(data => {
-            const review = data.data
-            showModalDetail(review)
-    })
+            const images = data.data;
+            const modal = document.getElementById('reviewModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalContentApp = document.getElementsByClassName('modal-content-app-review')[0];
+            if (modalContentApp) {
+                modalContentApp.classList.add('modal-image-app-review');
+            }
+            modalContent.innerHTML = `
+                <div class="review-modal-app-review">
+                    <div class="modal-topbar-app-review" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
+                        <button class="back-btn-app-review" aria-label="Back" >
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <span class="topbar-title-app-review">Review Images</span>
+                    </div>
+                    <div class="review-images-app-review">
+                        ${images.map((image, i) => `
+                            <img data-index="${i}" class="${i===0 ? 'active-app-review' : ''}" src="${base_img}${image.filename}" alt="thumb ${i+1}">
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+
+            const closeBtn = document.querySelector('.close-app-review');
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+                modalContentApp.classList.remove('modal-image-app-review');
+            }
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                    modalContentApp.classList.remove('modal-image-app-review');
+                }
+            }
+        }).catch(error => {
+            console.error('Error fetching images:', error);
+        });
+
 }
 
 function getData(pageIndex) {
@@ -139,7 +178,7 @@ function getData(pageIndex) {
                             <div class="review-actions-app-review">
                                 <div class="like-icon-app-review">
                                     <i class="far fa-thumbs-up"></i>
-                                    <span>Helpful</span> <span class="count-app-review" id="likeCount-${review.id}">(${review.rate ?? 0})</span>
+                                    <span>Helpful</span> <span class="count-app-review" id="likeCount-${review.id}">(${review.likes ?? 0})</span>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +188,7 @@ function getData(pageIndex) {
                                     class="review-img-app-review" 
                                     data-review-id="${review.id}" 
                                     data-index="${i}" 
-                                    src="${base_img}${image}" 
+                                    src="${base_img}${image.filename}" 
                                     alt="Review photo ${i+1}" 
                                     width="160px" 
                                     height="160px"
@@ -175,13 +214,16 @@ function getData(pageIndex) {
                 const likeCountEl = reviewCard.querySelector('.count-app-review');
                 if (!likeCountEl) return;
 
+                let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
+
                 if (likeIcon.getAttribute('data-liked') === 'true') {
+                    likeCountEl.textContent = `(${currentRate - 1})`;
+                    likeIcon.setAttribute('data-liked', 'false');
                     return;
                 }
 
                 likeIcon.setAttribute('data-liked', 'true');
 
-                let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
                 currentRate += 1;
                 likeCountEl.textContent = `(${currentRate})`;
             });
@@ -318,9 +360,9 @@ function showModalDetail(review) {
             <div class="review-modal-body-app-review">
                 <div class="modal-media-app-review">
                     <div class="media-viewer-app-review">
-                        <img id="modalMainImg" src="${base_img}${review.images[0]}" alt="review image">
-                        <button class="media-nav-app-review prev-app-review" id="mediaPrev"><i class="fas fa-chevron-left" style="font-size: 45px;"></i></button>
-                        <button class="media-nav-app-review next-app-review" id="mediaNext"><i class="fas fa-chevron-right" style="font-size: 45px;"></i></button>
+                        <img id="modalMainImg" src="${base_img}${review.images[0]?.filename}" alt="review image">
+                        <button class="media-nav-app-review prev-app-review" id="mediaPrev"><i class="fas fa-chevron-left" style="font-size: 45px; color: white;"></i></button>
+                        <button class="media-nav-app-review next-app-review" id="mediaNext"><i class="fas fa-chevron-right" style="font-size: 45px; color: white;"></i></button>
                     </div>
                 </div>
                 <div class="modal-details-app-review">
@@ -350,11 +392,11 @@ function showModalDetail(review) {
                     <div class="detail-text-app-review">${review.description}</div>
                     <div class="detail-footer-app-review">
                         <div class="author-app-review">${review.user}</div>
-                        <div class="helpful-app-review"><i class="far fa-thumbs-up"></i> Helpful <span class="count-app-review">(${review.rate ?? 0})</span></div>
+                        <div class="helpful-app-review"><i class="far fa-thumbs-up"></i> Helpful <span class="count-app-review">(${review.likes ?? 0})</span></div>
                     </div>
                     <div class="media-thumbs-app-review" id="mediaThumbs">
                         ${review.images.map((image, i) => `
-                            <img data-index="${i}" class="${i===0 ? 'active-app-review' : ''}" src="${base_img}${image}" alt="thumb ${i+1}">
+                            <img data-index="${i}" class="${i===0 ? 'active-app-review' : ''}" src="${base_img}${image.filename}" alt="thumb ${i+1}">
                         `).join('')}
                     </div>
                 </div>
@@ -366,13 +408,17 @@ function showModalDetail(review) {
 
     const helpfulBtn = modalContent.querySelector('.helpful-app-review');
     helpfulBtn.addEventListener('click', function () {
-        if (helpfulBtn.getAttribute('data-liked') === 'true') return;
-
         const likeCountEl = helpfulBtn.querySelector('.count-app-review');
         let currentRate = parseInt(likeCountEl.textContent.replace(/[()]/g, ''), 10) || 0;
+        if (helpfulBtn.getAttribute('data-liked') === 'true') {
+            currentRate -= 1;
+            likeCountEl.textContent = `(${currentRate})`;
+            helpfulBtn.setAttribute('data-liked', 'false');
+            return;
+        };
+
         currentRate += 1;
         likeCountEl.textContent = `(${currentRate})`;
-
         helpfulBtn.setAttribute('data-liked', 'true');
     });
     
@@ -406,7 +452,7 @@ function showModalDetail(review) {
     function setActive(index) {
         if (!totalImages || !mainImg) return;
         currentIndex = (index + totalImages) % totalImages;
-        mainImg.src = `${base_img}${review.images[currentIndex]}`;
+        mainImg.src = `${base_img}${review.images[currentIndex]?.filename}`;
         thumbs.forEach((t, i) => {
             if (i === currentIndex) t.classList.add('active-app-review');
             else t.classList.remove('active-app-review');
