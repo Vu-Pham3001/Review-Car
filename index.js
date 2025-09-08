@@ -64,6 +64,7 @@ function getImage() {
         .then(response => response.json())
         .then(data => {
             const images = data?.data;
+            console.log('images', images)
             const imageContainer = document.getElementById('imageContainer');
             if (imageContainer && Array.isArray(images)) {
                 imageContainer.innerHTML = '';
@@ -95,12 +96,15 @@ function getImageDetail(id) {
         .then(response => response.json())
         .then(data => {
             const images = data.data;
+            console.log('images', images);
+
             const modal = document.getElementById('reviewModal');
             const modalContent = document.getElementById('modalContent');
             const modalContentApp = document.getElementsByClassName('modal-content-app-review')[0];
             if (modalContentApp) {
                 modalContentApp.classList.add('modal-image-app-review');
             }
+
             modalContent.innerHTML = `
                 <div class="review-modal-app-review">
                     <div class="modal-topbar-app-review" onclick="(function(){document.getElementById('reviewModal').style.display='none'})()">
@@ -109,13 +113,25 @@ function getImageDetail(id) {
                         </button>
                         <span class="topbar-title-app-review">Review Images</span>
                     </div>
-                    <div class="review-images-app-review">
-                        ${images.map((image, i) => `
-                            <img data-index="${i}" class="${i===0 ? 'active-app-review' : ''}" src="${base_img}${image.filename}" alt="thumb ${i+1}">
-                        `).join('')}
-                    </div>
+                    <div class="review-images-app-review"></div>
                 </div>
             `;
+
+            const container = modalContent.querySelector('.review-images-app-review');
+
+            images.forEach((image, i) => {
+                const imgEl = document.createElement('img');
+                imgEl.src = `${base_img}${image.filename}`;
+                imgEl.alt = `thumb ${i + 1}`;
+                imgEl.dataset.index = i;
+
+                imgEl.addEventListener('click', () => {
+                    console.log("Clicked detail image:", image);
+                    showModalImagesDetail(image.reviewId)
+                });
+
+                container.appendChild(imgEl);
+            });
 
             modal.style.display = 'block';
 
@@ -123,19 +139,29 @@ function getImageDetail(id) {
             closeBtn.onclick = function() {
                 modal.style.display = 'none';
                 modalContentApp.classList.remove('modal-image-app-review');
-            }
-            
+            };
+
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = 'none';
                     modalContentApp.classList.remove('modal-image-app-review');
                 }
-            }
-        }).catch(error => {
+            };
+        })
+        .catch(error => {
             console.error('Error fetching images:', error);
         });
-
 }
+
+function showModalImagesDetail(id) {
+    fetch(`https://api.autocaruniverse.cloud/api/reviews/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            const review = data.data
+            showModalDetail(review)
+    })
+}
+
 
 function getData(pageIndex) {
     fetch(`https://api.autocaruniverse.cloud/api/reviews?pageIndex=${pageIndex}&pageSize=8`)
