@@ -947,9 +947,6 @@ body {
     gap: 10px;
     padding-top: 12px;
     overflow-x: auto;
-    flex: 1 1 100%;
-  width: 100%;
-  max-width: 100%;
 }
 
 .media-thumbs-app-review img {
@@ -1015,10 +1012,12 @@ body {
 
 @media (max-width: 600px) {
     .media-viewer-app-review img { height: 400px; }
-    .modal-details-app-review {
-        margin-top: 24px;
-    }
     .modal-details-app-review .detail-title-app-review { font-size: 1.5rem; }
+    .review-modal-body-app-review {
+        display: flex;
+        flex-direction: column; /* giữ layout dọc */
+        width: 100%
+    }
 }
 
 .review-images-app-review {
