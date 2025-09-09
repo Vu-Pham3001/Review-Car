@@ -373,6 +373,7 @@ function showModalDetail(review) {
     const modalContentApp = document.getElementsByClassName('modal-content-app-review')[0];
     if (modalContentApp) {
         modalContentApp.classList.add('modal-image-app-review');
+        modalContentApp.classList.add('modal-image-details-app-review');
     }
     
     modalContent.innerHTML = `
@@ -452,12 +453,14 @@ function showModalDetail(review) {
     closeBtn.onclick = function() {
         modal.style.display = 'none';
         modalContentApp.classList.remove('modal-image-app-review');
+        modalContentApp.classList.remove('modal-image-details-app-review');
     }
     
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = 'none';
             modalContentApp.classList.remove('modal-image-app-review');
+            modalContentApp.classList.remove('modal-image-details-app-review');
         }
     }
 
